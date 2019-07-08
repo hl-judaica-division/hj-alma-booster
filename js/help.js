@@ -29,8 +29,8 @@ function update_help_page() {
         "title": "Statistics",
         "details": `The statistics booster allows you to quickly build a 920 field statistic. The statistic is generated dynamically\
         as you add input. It can then either be copied manually from the box or applied directly to records with Macro Express.\
-        In order to use Macro Express you must make the trigger a clipboard event and start it by pressing the Macro Copy button.\
-        For more details about linking to Macro Express check the developer section.`,
+        In order to use Macro Express you must create a new script make the trigger a clipboard event that looks for "ALMA_STATISTICS|".\
+        Then you can start it by pressing the Macro Copy button.`,
         "fields": [{
             "field": "Unit",
             "type": "Dropdown",
@@ -64,7 +64,7 @@ function update_help_page() {
             about the issue (there's a link at the end of this page).`,
         }, {
             "message": "Couldn't find encoding level from Alma",
-            "explain": `This message appears when the extension is unable to locate the encoding level of the record on the Alma page.
+            "explain": `This message appears when the extension is unable to locate the encoding level of the record on the Alma page.\
             This generally only occurs when Alma is not open in Chrome or if you haven't got the record open.\
             If Alma is open then there may have been an update that causes an error, in which case please e-mail us\
             about the issue (there's a link at the end of this page).`,
