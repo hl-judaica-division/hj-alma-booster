@@ -1,0 +1,22 @@
+{
+    "env": {
+        "browser": true,
+        "jquery": true,
+        "es6": true
+    },
+    "extends": "google",
+    "rules": {
+        "camelcase": "off",
+        "max-len": "off",
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "quotes": "off",
+        "brace-style": [
+            "warn"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "linebreak-style": "off"
+    }
+}

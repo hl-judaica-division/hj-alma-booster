@@ -1,0 +1,74 @@
+{
+    "manifest_version": 2,
+
+    "name": "HJ Alma Booster",
+    "version": "0.0.0",
+    "description": "Alma Productivity tool originally developed for the Judaica Division of Widener Library by Tom Wagg",
+    "icons": {
+        "128": "images/book.png"
+    },
+
+    "browser_action": {
+        "default_icon": "images/book.png",
+        "default_popup": "html/popup.html"
+    },
+
+    "content_scripts": [
+        {
+            "run_at": "document_end",
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": ["js/jquery-3.2.1.min.js", "content_scripts/global.js"]
+        },
+        {
+            "run_at": "document_end",
+            "matches": [
+                "https://hvd.alma.exlibrisgroup.com/*"
+            ],
+            "js": ["js/fontawesome-all.js"]
+        },
+        {
+            "run_at": "document_end",
+            "matches": [
+                "https://hvd.alma.exlibrisgroup.com/mng/action/home.do*"
+            ],
+            "js": ["content_scripts/alma.js"]
+        }
+	],
+
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Alt+A"
+            }
+        }
+    },
+
+    "options_ui": {
+        "page": "html/options.html",
+        "chrome_style": false
+    },
+
+    "background": {
+        "scripts": ["background.js"]
+    },
+
+    "permissions": [
+		"storage",
+		"tabs",
+        "bookmarks",
+        "http://*/",
+        "https://*/",
+        "downloads",
+        "clipboardRead",
+        "clipboardWrite"
+	],
+
+    "web_accessible_resources": [
+        "images/book.png",
+        "html/loading.html"
+    ],
+
+    "content_security_policy": "script-src 'self' chrome-extension://*.html https://google.com; object-src 'self'"
+}

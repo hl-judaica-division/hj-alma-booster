@@ -1,0 +1,212 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <Title>HJ Alma Booster Help</Title>
+    <link rel="icon" href="../images/book.png">
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script defer src="../js/fontawesome-all.js"></script>
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/help.css">
+    <script src="../js/help.js"></script>
+</head>
+
+<body>
+    <div class="jumbotron">
+        <h1 class="display-4 border-0 p-0" data-toc-skip>Welcome to the HJ Alma Booster Help Page</h1>
+        <p class="lead">This is the location for all of the help that you may need with the extension</p>
+        <hr>
+    </div>
+    <div class="container-fluid px-5">
+        <div class="row mb-4">
+            <div class="col-3" id="table_of_contents" class="navbar navbar-light bg-light"></div>
+            <div class="col" id="content_col">
+                <h1>Getting Started</h1>
+                <p class="mb-1">Thank you for downloading the HJ Alma Booster. Let's get starting boosting your Alma
+                    experience!
+                    In order to open the popup you can either press <code>Alt+A</code> or click the red book icon in
+                    the top right of chrome. Once you've opened up the menu you're presented with a list of different
+                    Alma <span class="text-danger">boosters</span> as well as series of icons in the top panel. From
+                    left to right the icons are;
+                </p>
+                <ul class="fa-ul mb-1">
+                    <li><span class="fa-li"><i class="fas fa-question"></i></span>Help - Open this help page in a new
+                        tab</li>
+                    <li><span class="fa-li"><i class="fas fa-cog"></i></span>Settings - Open the settings page in a new
+                        tab</li>
+                    <li><span class="fa-li"><i class="fas fa-times"></i></span>Close - Close the popup window</li>
+                </ul>
+                <p class="mb-2">
+                    Now to navigate between boosters you can either use the mouse or keyboard. Each menu item is
+                    clickable and will take you right to the page. In addition you can use the keyboard to navigate
+                    the boosters. This can either be done with; <code>CTRL + arrow-key</code>, where arrow-key can
+                    be either <i class="far fa-caret-square-up"></i> or <i class="far fa-caret-square-down"></i>, or
+                    with <code>CTRL + #</code>, where # is the pane number you wish to open.
+                </p>
+                <p>
+                    Feel free to head into the settings and customise your experience. After that you're all set!
+                    Open Alma in a new tab and then open the extension to try out our boosters! If you need help with
+                    a specific booster just look below!
+                </p>
+                <h1>Boosters</h1>
+                <div id="card_template" class="card script hide">
+                    <div class="card-header">
+                        <h4 class="script-title no-menu">TITLE</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">
+                            Details
+                        </div>
+                        <p class="script-details">
+                            DETAILS
+                        </p>
+                        <div class="card-title">
+                            Fields
+                        </div>
+                        <table class="table table-hover table-bordered script-fields hide">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Field</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Required</th>
+                                    <th scope="col">Persistent</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="script-fields-body">
+                                <tr class="script-fields-row template hide">
+                                    <td class="script-fields-field"></td>
+                                    <td class="script-fields-type"></td>
+                                    <td class="script-fields-required"></td>
+                                    <td class="script-fields-pers"></td>
+                                    <td class="script-fields-details"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="card-title">
+                            Error Messages
+                        </div>
+                        <p class="error-none">N/A</p>
+                        <div class="errors-holder">
+                            <div class="error-group mb-1 hide">
+                                <div class="error-message text-danger">
+                                    ERROR
+                                </div>
+                                <div class="error-explain">
+                                    EXPLANATION
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Popup Boosters</h2>
+                <p>These scripts are found on the panes of the extension popup page which can be accessed by pressing
+                    <code>Alt+A</code> or by pressing the red book icon</p>
+                <div id="popup_booster_holder"></div>
+                <h2>In-Page Boosters</h2>
+                <p>
+                    These boosters will appear on the relevant Alma page as red buttons, there is no need for input,
+                    all information is gathered from the page so you only need to click the button.
+                </p>
+                <div id="inpage_booster_holder">
+                    <h3>Print <i class="fa fa-print text-danger"></i></h3>
+                    <h4>Print Record</h4>
+                    <p>
+                        <span class="text-danger">Note: An API key with bibliographic read permissions is required for
+                            this booster.</span><br> The print record booster will appear on Record View and MD Editor
+                        pages as the red printing icon shown above. After clicking the button, the booster will find the
+                        MMS ID on the page and then perform an API request for the record. The booster will then format
+                        this XML record into a printout with up to two barcodes. There will always be a barcode in the
+                        top left showing the MMS ID. Additionally, if there is a 035 field with an OCLC number that will
+                        be place in a barcode in the upper right. This printout is then displayed with the user's
+                        default chrome printing settings. If you wish to change the format or the fields that are in the
+                        barcodes then your developers can make these changes easily.
+                    </p>
+                    <h4>Print Invoice</h4>
+                    <p>
+                        <span class="text-danger">Note: An API key with bibliographic read permissions is required for
+                            this booster.</span><br> The print invoice booster will appear on Invoice Details page in
+                        the invoice lines tab with the same icon as above. After clicking the button, the booster will
+                        find the unique invoice identifier on the page and use that to pull up the invoice record with
+                        an API request. From this record, the booster will loop over every PO line and find the MMS ID
+                        attached to it. Then it will perform the Print Record booster on this MMS ID (see above) and
+                        store the outputted printout. Finally, when all records are complete it will put them in invoice
+                        order and print out the entire file. You can follow the progress of the booster with the loading
+                        page that is created from the start.
+                    </p>
+                </div>
+                <h1>FAQs</h1>
+                <ul class="qa-list">
+                    <li class="qa-group">
+                        <div class="qa-question">
+                            How does the extension work?
+                        </div>
+                        <div class="qa-answer">
+                            This extension works using a combination of user input through the popup and JavaScript
+                            within Alma to speed up repetitive tasks. Any time that Alma loads (while this
+                            extension is enabled), a series of scripts, styles and elements will be injected into Alma.
+                            This means that we can add new buttons, functionality and specialised look to the
+                            established system.<br /> When boosting tasks the extension has no more power than any human
+                            user, it is simply a lot faster and will click buttons and fill out forms in the blink of an
+                            eye. However, we hope to integrate with the Alma APIs as we develop in order to streamline
+                            the process.
+                        </div>
+                    </li>
+                    <li class="qa-group">
+                        <div class="qa-question">
+                            Why do I still see loading screens? This doesn't seem to have increased the speed of Alma?
+                        </div>
+                        <div class="qa-answer">
+                            The key point here is that the extension only has as much access as a normal user. The
+                            loading screens will be just as long and the extension cannot increase the speed of
+                            Alma.<br /> However, it can increase the speed that you <i>use</i> Alma and that is
+                            where the magic happens!
+                        </div>
+                    </li>
+                    <li class="qa-group">
+                        <div class="qa-question">
+                            Will this make loading Alma slower?
+                        </div>
+                        <div class="qa-answer">
+                            No! The files that we add to Alma on load are only a few megabytes in size, which is minimal
+                            compared to what Alma is loading, you should notice no decrease in speed.
+                        </div>
+                    </li>
+                    <li class="qa-group">
+                        <div class="qa-question">
+                            How do I update the extension?
+                        </div>
+                        <div class="qa-answer">
+                            The extension will update automatically every five hours once you have it downloaded so no
+                            need to worry about keeping up to date!
+                        </div>
+                    </li>
+                </ul>
+                <h1>For Developers</h1>
+                <p>
+                    Are you interested in how we made the HJ Alma Booster? Do you have ideas for improvements or a new
+                    booster? We'd love to hear your input on our
+                    <a class="text-danger" target="_blank" href="https://github.com/TomWagg/alma-booster">GitHub
+                        page</a>,
+                    feel free to open an issue or make a pull request!
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="jumbotron" style="margin-bottom: 0;">
+        <h1 class="display-4 border-0 p-0">Still Confused?</h1>
+        <p class="lead" id="contact">Is there something missing from the help section? Is there an issue with one of the
+            boosters?
+            Do you have an idea for a new booster? Feel free to send us an email
+            <a class="text-warning" href="mailto:juddiv@fas.harvard.edu?Subject=HJ%20Alma%20Booster%20Question">here</a>
+        </p>
+        <hr>
+    </div>
+</body>
+
+</html>

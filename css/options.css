@@ -1,0 +1,53 @@
+html,
+body,
+.row {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    padding: 30px;
+    width: 1200px;
+    margin: auto;
+    background: url(../images/geometry-orange.jpg);
+}
+
+#unit_holder {
+    overflow-y: scroll;
+    max-height: 310px;
+}
+
+.hide {
+    display: none;
+}
+
+.image-option {
+    width: 120px;
+}
+
+.image-selected {
+    border: 5px solid #cc3333;
+}
+
+#status {
+    height: 0px;
+    transition: height 0.2s;
+}
+
+#status.expand {
+    height: 70px;
+}
+
+.btn-group.special {
+    display: flex;
+    width: 100%;
+}
+
+.special .btn {
+    flex: 1
+}
+
+.label {
+    text-align: right;
+    margin: auto;
+}

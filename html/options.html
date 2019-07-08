@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Options Page</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/options.css" />
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <script src="../js/fontawesome-all.js"></script>
+    <script src="../js/options.js"></script>
+</head>
+
+<body>
+    <div class="container" style="max-width: 80%;">
+        <div class="card shadow">
+            <div class="card-header text-center">
+                <h1>HJ Alma Booster Options</h1>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col m-auto">
+                        <h5 class="m-0">Library Unit Code List</h5>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush mb-2" id="unit_holder"></ul>
+                <div class="row mb-2">
+                    <div class="col">
+                        <div class="input-group">
+                            <input id="new_unit_name" class="form-control" placeholder="New Unit Name" />
+                            <input id="new_unit_code" class="form-control" placeholder="New Unit Code" />
+                            <div class="input-group-append">
+                                <button id="unit_add" class="btn btn-outline-danger"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <li id="unit_template" class="hide">
+                    <div class="row">
+                        <div class="col m-auto">
+                            <i class="unit-name">UNIT NAME</i>
+                        </div>
+                        <div class="col m-auto">
+                            <i class="unit-code">UNIT CODE</i>
+                        </div>
+                        <div class="col-2 text-right">
+                            <div class="btn-group">
+                                <button class="btn btn-outline-danger unit-up"><i class="fas fa-chevron-up"></i></button>
+                                <button class="btn btn-outline-danger unit-down"><i class="fas fa-chevron-down"></i></button>
+                                <button class="btn btn-outline-danger unit-bin"><i class="far fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <div class="row mb-2">
+                    <div class="col text-center">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Dropdown Preview</span>
+                            </div>
+                            <select id="unit_drop" type="text" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-2">
+                    <div class="col label">
+                        Statistics cursor start position
+                    </div>
+                    <div id="stats_focus" class="col">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-danger" data-selector="#stats_macro_copy">
+                                <input type="radio" id="focus_button" autocomplete="off"> Copy Button
+                            </label>
+                            <label class="btn btn-danger" data-selector="#stats_type > .btn">
+                                <input type="radio" id="focus_toggles" autocomplete="off"> Cataloguing Type
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col label">
+                        Cataloguer Name
+                    </div>
+                    <div id="cat_toggle" class="col">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-danger" data-action="auto">
+                                <input type="radio" id="cat_auto" autocomplete="off"> Auto populate
+                            </label>
+                            <label class="btn btn-danger" data-action="manual">
+                                <input type="radio" id="cat_default" autocomplete="off"> Manual Choice
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col label">
+                        API Key
+                    </div>
+                    <div class="col">
+                        <input id="api_key" class="form-control" type="password" placeholder="API Key" />
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <h5 style="margin: 0;" id="status"></h5>
+                <div class="btn-group special">
+                    <button class="btn btn-danger" id="save">Save</button>
+                    <button class="btn btn-danger" id="save_and_close">Save and Close</button>
+                    <button class="btn btn-danger" id="close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

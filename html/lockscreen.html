@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+
+<head>
+    <title>Lockscreen</title>
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <script src="../content_scripts/global.js"></script>
+    <script src="../js/fontawesome-all.js"></script>
+    <script src="../js/lockscreen.js"></script>
+    <style>
+        @keyframes bounce_out {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .bounce {
+            animation-name: bounce_out;
+            animation-duration: 1s;
+        }
+        .hide {
+            display: none;
+        }
+        .label {
+            text-align: right;
+            margin: auto;
+        }
+
+        /* validation */
+        .input-success input {
+            border: 1px solid limegreen;
+        }
+
+        .input-success input:focus {
+            border: 1px solid limegreen;
+            box-shadow: 0 0 0 0.2rem rgba(27, 226, 58, 0.24);
+        }
+
+        .input-success span {
+            border: 1px solid limegreen;
+            color: #269726;
+            background-color: limegreen;
+        }
+
+        .input-failure input {
+            border: 1px solid #dc3545;
+        }
+
+        .input-failure input:focus {
+            border: 1px solid #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .input-failure span {
+            border: 1px solid #dc3545;
+            color: #751414;
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+<body style="background: url(../images/geometry-orange.jpg); height:100%; min-width: 800px;">
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center text-center" style="color:rgb(255,230,210)">
+            <div class="col-12">
+                <div id="lock" class="">
+                    <h1 class="display-3">HJ Alma Booster</h1>
+                    <p class="">You can use this extension to automate selected Alma work processes, particularly in the area of acquisitions, in addition to providing MARC printing capability from the invoice and Metadata Editor screens.</p>
+                    <p>Note: This extension was created to provide productivity tool support for the Harvard Library Judaica Division and reflects that unit's workflows and processes.</p>
+                    <hr class="">
+                    <p id="status" class="lead">To begin, please ask your administrator for the password</p>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;" id="problem">
+                        <strong>Incorrect Password</strong> This Extension will self-destruct after 10 incorrect entries. Entries remaining:
+                        <span id="remaining">9</span>
+                    </div>
+                    <div class="input-group mb-2" style="width:35%; margin: auto">
+                        <input class="form-control" type="password" id="admission_password">
+                        <select id="stats_unit" class="form-control hide">
+                            <option value="EL">Americas, Europe, and Oceania Division</option>
+                            <option value="JD">Judaica Division</option>
+                            <option value="LO">Local Services</option>
+                            <option value="CA">Metadata Creation</option>
+                            <option value="MD">Middle East, Africa, and Asia Division</option>
+                            <option value="DM">Metadata Management</option>
+                            <option value="MP">MACC-Africa/Asia/Pacific</option>
+                            <option value="MW">MACC-Americas and Europe 1</option>
+                            <option value="MA">MACC-Americas and Europe 2</option>
+                            <option value="M3">MACC-Americas and Europe 3</option>
+                            <option value="ME">MACC-East Asia</option>
+                            <option value="SL">Schlesinger</option>
+                            <option value="SE">Serials Cataloging</option>
+                            <option value="DA">User Services/DAP</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

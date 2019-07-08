@@ -1,0 +1,170 @@
+:root {
+    --px: 20px;
+    --glob_colour: #c94a41;
+    --font: 18px;
+    --font_weight: 700;
+}
+
+.hide {
+    display: none;
+}
+
+.badge-warning {
+    background-color: var(--glob_colour);
+    color: white;
+}
+
+.sticky {
+    position: sticky;
+    margin: 0;
+    padding: 2px 0 0 12px;
+    top: 10px;
+}
+
+body {
+    position: relative;
+}
+
+h1 {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 8px;
+}
+
+p {
+    margin-bottom: 2rem;
+}
+
+.qa-list {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.qa-group {
+    padding-left: 1em;
+    text-indent: -1em;
+    margin-bottom: 10px;
+}
+
+.qa-question {
+    font-style: italic;
+    color: var(--glob_colour);
+}
+
+.qa-question::before {
+    content: "Q: ";
+    font-weight: bold;
+}
+
+.qa-answer::before {
+    content: "A: ";
+    font-weight: bold;
+}
+.script {
+    margin-bottom: 20px;
+}
+
+.fa-li {
+    top: 0.25em;
+}
+
+.script .card-header {
+    background-color: var(--glob_colour);
+    color: white;
+}
+
+.script .card-title {
+    font-weight: bold;
+}
+
+.script thead {
+    background-color: var(--glob_colour);
+    color: white;
+}
+
+.script .error-message {
+    font-style: italic;
+}
+
+.script .error-explain {
+    font-size: 80%;
+}
+
+.jumbotron {
+    background: var(--glob_colour);
+    color: white;
+}
+
+/* First level */
+
+.nav>li>a {
+    padding: 4px var(--px);
+    font-size: var(--font);
+    font-weight: var(--font_weight);
+    color: #333;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    padding-left: calc(var(--px) - 1px);
+    color: var(--glob_colour);
+    border-left: 1px solid var(--glob_colour);
+}
+
+.nav>li>a.active:focus, .nav>li>a.active:hover, .nav>li>a.active {
+    font-weight: 800;
+    color: var(--glob_colour);
+    border-left: 2px solid var(--glob_colour);
+    padding-left: calc(var(--px) - 2px);
+}
+
+/* Second Level */
+
+.nav .nav>li>a {
+    padding: 1px var(--px);
+    padding-left: calc(var(--px) + 10px);
+    font-size: calc(var(--font) - 2px);
+    font-weight: calc(var(--font_weight) - 100);
+}
+
+.nav .nav>li>a:focus, .nav .nav>li>a:hover {
+    padding-left: calc(var(--px) + 9px);
+}
+
+.nav .nav>li>a.active:focus, .nav .nav>li>a.active:hover, .nav .nav>li>a.active {
+    font-weight: 800;
+    padding-left: calc(var(--px) + 8px);
+}
+
+/* Third Level*/
+
+.nav .nav .nav>li>a {
+    padding-left: calc(var(--px) + 20px);
+    font-size: calc(var(--font) - 4px);
+    font-weight: calc(var(--font_weight) - 200);
+}
+
+.nav .nav .nav>li>a:focus, .nav .nav .nav>li>a:hover {
+    padding-left: calc(var(--px) + 19px);
+}
+
+.nav .nav .nav>li>a.active:focus, .nav .nav .nav>li>a.active:hover, .nav .nav .nav>li>a.active {
+    font-weight: 800;
+    padding-left: calc(var(--px) + 18px);
+}
+
+/* Fourth level */
+
+.nav .nav .nav .nav>li>a {
+    padding-left: calc(var(--px) + 30px);
+    font-size: calc(var(--font) - 6px);
+    font-weight: calc(var(--font_weight) - 300);
+}
+
+.nav .nav .nav .nav>li>a:focus, .nav .nav .nav .nav>li>a:hover {
+    padding-left: calc(var(--px) + 29px);
+}
+
+.nav .nav .nav .nav>li>a.active:focus, .nav .nav .nav .nav>li>a.active:hover, .nav .nav .nav .nav>li>a.active {
+    font-weight: 800;
+    padding-left: calc(var(--px) + 28px);
+}

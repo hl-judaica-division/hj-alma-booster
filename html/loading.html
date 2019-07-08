@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <Title>HJ Alma Booster Popup</Title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/popup.css"> -->
+    <style>
+        body {
+            width: 500px;
+            height: 233px;
+        }
+
+        #loading_modal {
+            display: block;
+        }
+
+        .progress {
+            height: 30px;
+        }
+
+        #invoice {
+            background-color: #2874A6;
+        }
+
+        #po_lines {
+            background-color: #229954;
+        }
+
+        #bibs {
+            background-color: #B03A2E;
+        }
+
+        #prints {
+            background-color: #F39C12;
+        }
+
+        .progress-bar {
+            -webkit-transition: width 1.0s ease !important;
+            -moz-transition: width 1.0s ease !important;
+            -o-transition: width 1.0s ease !important;
+            transition: width 1.0s ease !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid" id="loading" tabindex="-1">
+        <div class="row w-100 text-center">
+            <div class="col">
+                <h5>Invoice Printing Progress</h5>
+            </div>
+        </div>
+        <div class="row w-100 text-center">
+            <div class="col">
+                <b>Vendor:</b> <span id="vendor"></span>
+            </div>
+            <div class="col">
+                <b>Invoice Number:</b> <span id="invoice_number"></span>
+            </div>
+        </div>
+        <div id="error" style="display:none;">
+            <hr />
+            <div class="alert alert-danger w-100" role="alert">
+                Unable to do ... something
+            </div>
+        </div>
+        <hr />
+        <div class="progress mb-2">
+            <div id="invoice" class="progress-bar" role="progressbar" style="width: 0%">Retrieving invoice</div>
+        </div>
+        <div class="progress mb-2">
+            <div id="po_lines" class="progress-bar" role="progressbar" style="width: 0%">Collecting PO Lines</div>
+        </div>
+        <div class="progress mb-2">
+            <div id="bibs" class="progress-bar" role="progressbar" style="width: 0%">Finding bib records</div>
+        </div>
+        <div class="progress mb-2">
+            <div id="prints" class="progress-bar" role="progressbar" style="width: 0%">Preparing records for print</div>
+        </div>
+    </div>
+</body>
+
+</html>
