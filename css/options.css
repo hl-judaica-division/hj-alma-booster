@@ -52,3 +52,7 @@ body {
 .main-card {
     margin: 20px 0px;
 }
+
+.unit-up, .unit-down {
+    border-right: 0;
+}

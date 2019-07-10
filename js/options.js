@@ -88,7 +88,7 @@ function save_options(close) {
  * Fill the initial settings page with the current settings in storage
  */
 function restore_options() {
-    chrome.storage.sync.get(["library_unit", "stats_focus", "cat_toggle", "api_key", "api_key_type"], function(items) {
+    chrome.storage.sync.get(["library_unit", "stats_focus", "cat_toggle", "api_key_type"], function(items) {
         if (items.library_unit) {
             console.log(items.library_unit);
             for (let i = 0; i < items.library_unit.length; i++) {
@@ -99,17 +99,13 @@ function restore_options() {
         if (items.stats_focus) {
             const focus_toggle = document.querySelector("#stats_focus .btn[data-selector='" + items.stats_focus + "']");
             focus_toggle.click();
-            document.body.click();
         }
         if (items.cat_toggle) {
             console.log(items.cat_toggle);
             document.querySelector("#cat_toggle .btn[data-action='" + items.cat_toggle + "']").click();
-            document.body.click();
-        }
-        if (items.api_key) {
-            document.getElementById("api_key").value = "KEY IN STORAGE";
         }
         if (items.api_key_type) {
+            document.getElementById("api_key").value = "KEY IN STORAGE";
             document.getElementById("api_key_type").selectedIndex = items.api_key_type;
             $("#api_key_type").on("change", function() {
                 if (this.selectedIndex == items.api_key_type) {
@@ -119,6 +115,7 @@ function restore_options() {
                 }
             });
         }
+        $("*").blur();
     });
 }
 
