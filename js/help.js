@@ -33,7 +33,7 @@ function update_help_page() {
         In order to use Macro Express you must create a new script make the trigger a clipboard event that looks for "ALMA_STATISTICS|".\
         Then you can start it by pressing the Macro Copy button. The macro assumes that the bibliographic and holdings records are already\
         open and on screen in the Metadata Editor. The Harvard Library Judaica Division Macro Express script used in conjunction with this\
-        Booster is available via GitHub HERE (TODO).`,
+        Booster is available via GitHub <a target="_blank" class="text-danger" href="https://github.com/hl-judaica-division/hj-alma-booster-macro-express-helper">here</a>.`,
         "fields": [{
             "field": "Unit",
             "type": "Dropdown",
@@ -145,8 +145,9 @@ function update_help_page() {
         provide the information about the bibliographic records for the individual items to be linked to the collection box,\
         either by looking them up by MMS ID or by using the record currently on screen. Finally, the\
         third section of the booster page can be used to check that all items have been linked to a box after completion.
-        In order to use Macro Express you must create a new script make the trigger a clipboard event that looks for "XXXX |".\
-        Then you can start it by pressing the Macro Copy button. The Harvard Library Judaica Division Macro Express script used in conjunction with this Booster is available via GitHub HERE.`,
+        In order to use Macro Express you must create a new script make the trigger a clipboard event that looks for "ALMA-LINKING-ITEM".\
+        Then you can start it by pressing the Macro Copy button. The Harvard Library Judaica Division Macro Express script used in conjunction with this Booster is available via GitHub\
+        <a target="_blank" class="text-danger" href="https://github.com/hl-judaica-division/hj-alma-booster-macro-express-helper">here</a>.`,
         "fields": [{
             "field": "Box Barcode",
             "type": "Text",
@@ -208,7 +209,7 @@ function new_booster_card(info, container) {
     card.id = "";
     card.querySelector(".script-title").classList.remove("no-menu");
     card.querySelector(".script-title").innerText = info.title;
-    card.querySelector(".script-details").innerText = info.details;
+    card.querySelector(".script-details").innerHTML = info.details;
     let fields = null;
     for (let i = 0; i < info.fields.length; i++) {
         if (fields === null) {

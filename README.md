@@ -23,5 +23,8 @@ If you wish to install a developer version of the extension then follow these st
 
 If you need more information on Chrome Extension development I recommend their guides and tutorials, the [documentation](https://developer.chrome.com/extensions/getstarted) is very thorough.
 
+## Macro Express
+The Chrome Extension often works in conjunction with Macro Express to write information to records. We have created another repository to hold the relevant Macro Express macros and this can be accessed [here](https://github.com/hl-judaica-division/hj-alma-booster-macro-express-helper)
+
 ## Contact
 If you have any questions or issues please address them to Elizabeth Vernon at juddiv@fas.harvard.edu.
