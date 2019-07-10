@@ -27,10 +27,13 @@ function update_help_page() {
     const popup_holder = document.getElementById("popup_booster_holder");
     new_booster_card({
         "title": "Statistics",
-        "details": `The statistics booster allows you to quickly build a 920 field statistic. The statistic is generated dynamically\
+        "details": `NOTE: This Booster will only work in the Harvard Library Alma environment, although the technique may be useful to other installations as a model for a booster to construct and add field data.
+        The Statistics booster allows you to quickly build a 920 field; the local holdings field used at Harvard to store cataloguing statistics data. The 920 field is generated dynamically\
         as you add input. It can then either be copied manually from the box or applied directly to records with Macro Express.\
         In order to use Macro Express you must create a new script make the trigger a clipboard event that looks for "ALMA_STATISTICS|".\
-        Then you can start it by pressing the Macro Copy button.`,
+        Then you can start it by pressing the Macro Copy button. The macro assumes that the bibliographic and holdings records are already\
+        open and on screen in the Metadata Editor. The Harvard Library Judaica Division Macro Express script used in conjunction with this\
+        Booster is available via GitHub HERE (TODO).`,
         "fields": [{
             "field": "Unit",
             "type": "Dropdown",
@@ -79,11 +82,11 @@ function update_help_page() {
     new_booster_card({
         "title": "Invoice Processing",
         "details": `The invoice processing booster allows you to check, receive and review invoices in Alma. The functions \
-        search for the invoice by vendor and invoice code and then open the first invoice in the list (we are assuming)\
-        no duplicates. Then you will either check, receive or review the invoice depending on what was clicked.\
-        Finally the persistency of the fields is designed to be intelligent such that it always remembers the vendor code\
-        , since we assume you'll look at invoices from the same vendor at one time. However, the invoice number is only\
-        persistent after checking an invoice but it cleared after receiving or reviewing an invoice.`,
+        search for the invoice by vendor and invoice code and then open the first invoice in the results list\
+        (assuming a results list of one, since the vendor-invoice number combination must be unique). Then you\
+        will either check, receive or review the invoice depending on what was clicked. The design is meant to minimise keystrokes.\
+        The vendor code is persistent, since it is assumed that users are likely to look at invoices from the same vendor at one time.\
+        The invoice number, on the other hand, is only persistent after checking an invoice but it cleared after receiving or reviewing an invoice.`,
         "fields": [{
             "field": "Vendor Code",
             "type": "Text",
@@ -104,10 +107,11 @@ function update_help_page() {
     }, popup_holder);
     new_booster_card({
         "title": "Replace Fund",
-        "details": `The replace fund booster allows you to quickly add or replace a fund for a particular invoice line.\
-        This can be done in one of two ways. Either by starting the booster whilst on the invoice page and specifying a \
-        line number or starting it whilst on an invoice line page in which case it will ignore any line number. Note that\
-        this booster assumes that there is at most one fund already on the item.`,
+        "details": `NOTE: This booster was designed before Ex Libris implemented the replace fund function in Alma. This booster is therefore no longer needed, but is left here in case the design is useful in suggesting workflow solutions to other issues.
+        The replace fund booster allows you to quickly add or replace a fund for a particular invoice line.\
+        This can be done in one of two ways, either by starting the booster while on the invoice page and specifying a \
+        line number or starting it while on an invoice line page in which case it will ignore any line number. Note that\
+        this booster assumes that there is at most one fund already associated with an invoice line.`,
         "fields": [{
             "field": "Fund Code",
             "type": "Text",
@@ -135,10 +139,14 @@ function update_help_page() {
     }, popup_holder);
     new_booster_card({
         "title": "Linking",
-        "details": `The linking booster helps to link new records to a box. The first half of the page is for inputting\
-        the information about the box to which you'll add the records. After this you can use the second section to link\
-        individual records, either by looking them up by MMS ID or by using the record currently on screen. Finally, the\
-        third section can be used to check that all items have been linked to a box after completion.`,
+        "details": `NOTE: This Booster will only work in the Harvard Library Alma environment, although the technique may be useful to other installations as a model for a booster to construct and add field data.
+        The linking booster helps to "link" bibliographic records to a special collection box by adding Harvard local field 929 to the bibliographic record and 977 to the holding record.\
+        The first section of the booster page is for inputting the information about the box to which you'll add the records. After this you can use the second section to\
+        provide the information about the bibliographic records for the individual items to be linked to the collection box,\
+        either by looking them up by MMS ID or by using the record currently on screen. Finally, the\
+        third section of the booster page can be used to check that all items have been linked to a box after completion.
+        In order to use Macro Express you must create a new script make the trigger a clipboard event that looks for "XXXX |".\
+        Then you can start it by pressing the Macro Copy button. The Harvard Library Judaica Division Macro Express script used in conjunction with this Booster is available via GitHub HERE.`,
         "fields": [{
             "field": "Box Barcode",
             "type": "Text",
@@ -176,6 +184,14 @@ function update_help_page() {
             "pers": "No",
             "details": `The MMS ID of the box that you want to check.`,
         }],
+        "errors": [],
+    }, popup_holder);
+    new_booster_card({
+        "title": "API Statistics",
+        "details": `THIS IS A BOOSTER IN DEVELOPMENT - It has the same functionality as the Statistics booster described above,\
+        but incorporates Alma Write APIs, and will not require Macro Express to assist it, and will also not require the\
+        bibliographic and holding records to be open in order for the 920 field to be added to the holding record.`,
+        "fields": [],
         "errors": [],
     }, popup_holder);
 }

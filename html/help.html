@@ -31,7 +31,7 @@
                     The HJ Alma Booster (Harvard Library Judaica Division Alma Booster Chrome Extension) was created—and
                     is in the process of further development—by Tom Wagg, Harvard '20, Littauer Judaica Library Student
                     Assistant, for the Harvard Library Judaica Division. It was built during the course of the Harvard
-                    Judaica Division's implementation of the Alma library information system software, and was
+                    Judaica Division's implementation of Ex Libris' Alma library information system software, and was
                     subsequently shared with other Harvard Library units. This booster enables printing bibliographic
                     records from multiple points in Alma, reduces mouse-clicking, streamlines navigation to invoice and
                     receiving screens, and facilitates adding of Harvard local MARC fields to bibliographic and holding
@@ -39,21 +39,26 @@
                     welcomes collaboration with other Alma library installations to further develop this tool. </p>
                 <p>
                     The code for the HJ Alma Booster can be found on GitHub
-                    <a class="text-danger" href="https://github.com/hl-judaica-division/hj-alma-booster">here</a>. To add the current
-                    version of the HJ Alma Booster to your Chrome profile, click <a class="text-danger" href="">TO BE ADDED</a> and contact
-                    Elizabeth Vernon of the Harvard Library Judaica Division at juddiv@fas.harvard.edu for the password.
+                    <a class="text-danger" href="https://github.com/hl-judaica-division/hj-alma-booster">here</a>. To
+                    add the current
+                    version of the HJ Alma Booster to your Chrome profile, click <a class="text-danger" href="">TO BE
+                        ADDED</a> and contact
+                    Elizabeth Vernon of the Harvard Library Judaica Division at juddiv@fas.harvard.edu for the password
+                    to activate the Chrome extension.
                 </p>
                 <h1>Getting Started</h1>
                 <p class="mb-1">Thank you for downloading the HJ Alma Booster. Let's get started boosting your Alma
-                    experience! In order to open the popup you can either press <code>Alt+A</code> or click the red
+                    experience! Boosters are accessed in one of two ways – via a pop-up in the address bar or via an
+                    in-page icon.
+                    In order to open the popup you can either press <code>Alt+A</code> or click the red
                     book icon in the top right of Chrome. Once you open the menu, you will be presented with a list
                     of different Alma <span class="text-danger">boosters</span> as well as series of icons in the
                     top panel. From left to right the icons are;
                 </p>
                 <ul class="fa-ul mb-1">
-                    <li><span class="fa-li"><i class="fas fa-question"></i></span>Help - Open this help page in a new
+                    <li><span class="fa-li"><i class="fas fa-question"></i></span>Help - Open this Help page in a new
                         tab</li>
-                    <li><span class="fa-li"><i class="fas fa-cog"></i></span>Settings - Open the settings page in a new
+                    <li><span class="fa-li"><i class="fas fa-cog"></i></span>Settings - Open the Settings page in a new
                         tab</li>
                     <li><span class="fa-li"><i class="fas fa-times"></i></span>Close - Close the popup window</li>
                 </ul>
@@ -131,7 +136,7 @@
                 </p>
                 <div id="inpage_booster_holder">
                     <h3>Print <i class="fa fa-print text-danger"></i></h3>
-                    <h4>Print Record</h4>
+                    <h4>Print Individual Bibliographic Record</h4>
                     <p>
                         <span class="text-danger">Note: An API key with bibliographic read permissions is required for
                             this booster.</span><br> The print record booster will appear on Record View and MD Editor
@@ -143,7 +148,7 @@
                         default chrome printing settings. If you wish to change the format or the fields that are in the
                         barcodes then your developers can make these changes easily.
                     </p>
-                    <h4>Print Invoice</h4>
+                    <h4>Print All Bibliographic Associated with Invoice</h4>
                     <p>
                         <span class="text-danger">Note: An API key with bibliographic read permissions is required for
                             this booster.</span><br> The print invoice booster will appear on Invoice Details page in
@@ -166,22 +171,24 @@
                             This extension works using a combination of user input through the popup and JavaScript
                             within Alma to speed up repetitive tasks. Any time that Alma loads (while this
                             extension is enabled), a series of scripts, styles and elements will be injected into Alma.
-                            This means that we can add new buttons, functionality and specialised look to the
-                            established system.<br /> When boosting tasks the extension has no more power than any human
+                            This means that we can add new buttons, functionality and other customisation.
+                            <br /> When boosting tasks the extension currently has no more power than any human
                             user, it is simply a lot faster and will click buttons and fill out forms in the blink of an
-                            eye. However, we hope to integrate with the Alma APIs as we develop in order to streamline
-                            the process.
+                            eye. However, we hope to integrate Alma write APIs as we develop in order to streamline
+                            work processes.
                         </div>
                     </li>
                     <li class="qa-group">
                         <div class="qa-question">
-                            Why do I still see loading screens? This doesn't seem to have increased the speed of Alma?
+                            Why do I still see the Alma "spinning wheel" loading screens? This doesn't seem to have
+                            increased the speed of Alma!
                         </div>
                         <div class="qa-answer">
-                            The key point here is that the extension only has as much access as a normal user. The
-                            loading screens will be just as long and the extension cannot increase the speed of
-                            Alma.<br /> However, it can increase the speed that you <i>use</i> Alma and that is
-                            where the magic happens!
+                            As mentioned above, the key point is that the extension only has as much access as a normal
+                            user.
+                            The extension cannot change Alma response time, however it <i>does</i> maximise your
+                            efficient use of
+                            Alma and that is where the magic happens!
                         </div>
                     </li>
                     <li class="qa-group">
@@ -191,6 +198,16 @@
                         <div class="qa-answer">
                             No! The files that we add to Alma on load are only a few megabytes in size, which is minimal
                             compared to what Alma is loading, you should notice no decrease in speed.
+                        </div>
+                    </li>
+                    <li class="qa-group">
+                        <div class="qa-question">
+                            Do I need to input the password every session that I use the Alma Booster?
+                        </div>
+                        <div class="qa-answer">
+                            No, the password is only for installation. Users must still log into Alma using their Alma
+                            password, and will have the same permissions that they always do. Boosters will not allow
+                            you to do anything in Alma you weren’t already able to do!
                         </div>
                     </li>
                     <li class="qa-group">
