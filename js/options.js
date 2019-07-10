@@ -46,13 +46,25 @@ function save_options(close) {
         });
     }
 
+    const api_key = document.getElementById("api_key").value;
+    if (api_key == "KEY IN STORAGE" || api_key == "No key of this type stored") {
+        new_data = {
+            "library_unit": lib,
+            "stats_focus": document.querySelector("#stats_focus .btn.active").getAttribute("data-selector"),
+            "cat_toggle": document.querySelector("#cat_toggle .btn.active").getAttribute("data-action"),
+        };
+    } else {
+        new_data = {
+            "library_unit": lib,
+            "stats_focus": document.querySelector("#stats_focus .btn.active").getAttribute("data-selector"),
+            "cat_toggle": document.querySelector("#cat_toggle .btn.active").getAttribute("data-action"),
+            "api_key": api_key,
+            "api_key_type": document.getElementById("api_key_type").selectedIndex,
+        };
+    }
+
     // save the new options to chrome.storage
-    chrome.storage.sync.set({
-        "library_unit": lib,
-        "stats_focus": document.querySelector("#stats_focus .btn.active").getAttribute("data-selector"),
-        "cat_toggle": document.querySelector("#cat_toggle .btn.active").getAttribute("data-action"),
-        "api_key": document.getElementById("api_key").value,
-    }, function() {
+    chrome.storage.sync.set(new_data, function() {
         // change the status to let the user know that it worked
         if (close) {
             status.innerHTML = "<hr>Options Saved - closing now!<hr>";
@@ -76,7 +88,7 @@ function save_options(close) {
  * Fill the initial settings page with the current settings in storage
  */
 function restore_options() {
-    chrome.storage.sync.get(["library_unit", "stats_focus", "cat_toggle", "api_key"], function(items) {
+    chrome.storage.sync.get(["library_unit", "stats_focus", "cat_toggle", "api_key", "api_key_type"], function(items) {
         if (items.library_unit) {
             console.log(items.library_unit);
             for (let i = 0; i < items.library_unit.length; i++) {
@@ -95,7 +107,17 @@ function restore_options() {
             document.body.click();
         }
         if (items.api_key) {
-            document.getElementById("api_key").value = items.api_key;
+            document.getElementById("api_key").value = "KEY IN STORAGE";
+        }
+        if (items.api_key_type) {
+            document.getElementById("api_key_type").selectedIndex = items.api_key_type;
+            $("#api_key_type").on("change", function() {
+                if (this.selectedIndex == items.api_key_type) {
+                    $("#api_key").val("KEY IN STORAGE");
+                } else {
+                    $("#api_key").val("No key of this type stored");
+                }
+            });
         }
     });
 }

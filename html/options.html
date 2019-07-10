@@ -15,7 +15,7 @@
 
 <body>
     <div class="container" style="max-width: 80%;">
-        <div class="card shadow">
+        <div class="card main-card">
             <div class="card-header text-center">
                 <h1>HJ Alma Booster Options</h1>
             </div>
@@ -32,7 +32,8 @@
                             <input id="new_unit_name" class="form-control" placeholder="New Unit Name" />
                             <input id="new_unit_code" class="form-control" placeholder="New Unit Code" />
                             <div class="input-group-append">
-                                <button id="unit_add" class="btn btn-outline-danger"><i class="fas fa-plus"></i></button>
+                                <button id="unit_add" class="btn btn-outline-danger"><i
+                                        class="fas fa-plus"></i></button>
                             </div>
                         </div>
                     </div>
@@ -47,9 +48,12 @@
                         </div>
                         <div class="col-2 text-right">
                             <div class="btn-group">
-                                <button class="btn btn-outline-danger unit-up"><i class="fas fa-chevron-up"></i></button>
-                                <button class="btn btn-outline-danger unit-down"><i class="fas fa-chevron-down"></i></button>
-                                <button class="btn btn-outline-danger unit-bin"><i class="far fa-trash-alt"></i></button>
+                                <button class="btn btn-outline-danger unit-up"><i
+                                        class="fas fa-chevron-up"></i></button>
+                                <button class="btn btn-outline-danger unit-down"><i
+                                        class="fas fa-chevron-down"></i></button>
+                                <button class="btn btn-outline-danger unit-bin"><i
+                                        class="far fa-trash-alt"></i></button>
                             </div>
                         </div>
                     </div>
@@ -66,30 +70,30 @@
                 </div>
                 <hr />
                 <div class="row mb-2">
-                    <div class="col label">
+                    <div class="col-4 m-auto">
                         Statistics cursor start position
                     </div>
-                    <div id="stats_focus" class="col">
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-danger" data-selector="#stats_macro_copy">
+                    <div id="stats_focus" class="col text-right">
+                        <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                            <label class="btn btn-danger w-100" data-selector="#stats_macro_copy">
                                 <input type="radio" id="focus_button" autocomplete="off"> Copy Button
                             </label>
-                            <label class="btn btn-danger" data-selector="#stats_type > .btn">
+                            <label class="btn btn-danger w-100" data-selector="#stats_type > .btn">
                                 <input type="radio" id="focus_toggles" autocomplete="off"> Cataloguing Type
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col label">
+                    <div class="col-4 m-auto">
                         Cataloguer Name
                     </div>
-                    <div id="cat_toggle" class="col">
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-danger" data-action="auto">
+                    <div id="cat_toggle" class="col text-right">
+                        <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                            <label class="btn btn-danger w-100" data-action="auto">
                                 <input type="radio" id="cat_auto" autocomplete="off"> Auto populate
                             </label>
-                            <label class="btn btn-danger" data-action="manual">
+                            <label class="btn btn-danger w-100" data-action="manual">
                                 <input type="radio" id="cat_default" autocomplete="off"> Manual Choice
                             </label>
                         </div>
@@ -97,11 +101,26 @@
                 </div>
                 <hr />
                 <div class="row">
-                    <div class="col label">
+                    <div class="col-4 m-auto">
                         API Key
                     </div>
-                    <div class="col">
-                        <input id="api_key" class="form-control" type="password" placeholder="API Key" />
+                    <div class="col text-right">
+                        <div class="input-group">
+                            <select id="api_key_type" type="text" class="form-control">
+                                <option value="null"></option>
+                                <option value="r-all">Read All</option>
+                                <option value="r-bib">Read Bibliographic</option>
+                                <option value="r-acq">Read Acquisitions</option>
+                                <option value="w-all">Write All</option>
+                                <option value="w-bib">Write Bibliographic</option>
+                                <option value="w-acq">Write Acquisitions</option>
+                                <option value="rw-all">Read-Write All</option>
+                                <option value="rw-bib">Read-Write Bibliographic</option>
+                                <option value="rw-acq">Read-Write Acquisitions</option>
+                            </select>
+                            <!-- <input id="api_key_desc" class="form-control" type="text" placeholder="Key Permissions"> -->
+                            <input id="api_key" class="form-control" type="text" placeholder="New API Key" />
+                        </div>
                     </div>
                 </div>
             </div>

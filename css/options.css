@@ -6,9 +6,6 @@ body,
 }
 
 body {
-    padding: 30px;
-    width: 1200px;
-    margin: auto;
     background: url(../images/geometry-orange.jpg);
 }
 
@@ -50,4 +47,8 @@ body {
 .label {
     text-align: right;
     margin: auto;
+}
+
+.main-card {
+    margin: 20px 0px;
 }
