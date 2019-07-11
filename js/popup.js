@@ -121,6 +121,9 @@ $(function() {
         },
     });
     macro_clip.on("success", function(e) {
+        chrome.storage.sync.set({
+            "cat_value": document.getElementById("stats_cataloguer").value,
+        });
         document.getElementById("stats_macro_copy").innerText = "Copied!";
         window.close();
         setTimeout(function() {
@@ -698,21 +701,23 @@ function api_stats_go() {
 /**
  * Get cataloguer name, encoding level and record and MMS ID
  */
-function stats_prep() {
-    send_active_message({
-        "greeting": "introductions",
-    }, function(cat) {
-        if (cat) {
-            document.getElementById("stats_cataloguer").value = cat;
-            check_stats_input("stats_cataloguer", "stats_string_cataloguer", "f");
+function stats_prep(get_cat) {
+    if (get_cat) {
+        send_active_message({
+            "greeting": "introductions",
+        }, function(cat) {
+            if (cat) {
+                document.getElementById("stats_cataloguer").value = cat;
+                check_stats_input("stats_cataloguer", "stats_string_cataloguer", "f");
 
-            document.getElementById("api_stats_cataloguer").value = cat;
-            check_stats_input("api_stats_cataloguer", "api_stats_string_cataloguer", "f");
-        } else {
-            create_alert_in_element(document.getElementById("stats_error"), "Couldn't find username from Alma");
-            create_alert_in_element(document.getElementById("api_stats_error"), "Couldn't find username from Alma");
-        }
-    });
+                document.getElementById("api_stats_cataloguer").value = cat;
+                check_stats_input("api_stats_cataloguer", "api_stats_string_cataloguer", "f");
+            } else {
+                create_alert_in_element(document.getElementById("stats_error"), "Couldn't find username from Alma");
+                create_alert_in_element(document.getElementById("api_stats_error"), "Couldn't find username from Alma");
+            }
+        });
+    }
     send_active_message({
         "greeting": "record_information",
     }, function(response) {
