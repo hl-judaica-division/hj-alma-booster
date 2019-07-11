@@ -13,6 +13,10 @@ records for statistics and special collections processing. The Harvard Library J
 welcomes collaboration with other Alma library installations to further develop this tool.
 
 ## Installation
+### Stable Release
+If you wish to install the current stable release of the Chrome extension on your machine you can follow [this](https://chrome.google.com/webstore/detail/hj-alma-booster/ghacelnoihffpganbhbbbonpjjpfjknf?authuser=1) link to the Chrome Web Store and click add to Chrome.
+
+### Developer Version
 If you wish to install a developer version of the extension then follow these steps;
 1. Clone or Download this repository into a local folder on your computer (green button in the top right of this page)
 2. Open a new tab in chrome and go to "chrome://extensions"
