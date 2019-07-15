@@ -722,6 +722,39 @@ function expand_fund_code(code) {
 ================
 */
 /**
+ * Simple alma search
+ * @param  {[string]} type    the main type of search
+ * @param  {[string]} subtype subtype of the search
+ * @param  {[string]} text    the search field text
+ */
+function alma_simple_search(type, subtype, text) {
+    // Get all of the options for type and click the right one
+    const options = document.getElementById("simpleSearchObjectType").children;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].getAttribute("data-search-label") === type) {
+            options[i].children[0].click();
+            break;
+        }
+    }
+
+    // Get all the new suboptions and click the correct one
+    const suboptions = document.getElementById("simpleSearchIndexes_hiddenSelect").options;
+    for (let i = 0; i < suboptions.length; i++) {
+        if (suboptions[i].innerText === subtype) {
+            document.getElementById("simpleSearchIndexes_hiddenSelect").selectedIndex = i;
+            break;
+        }
+    }
+
+    // Insert the search text
+    document.getElementById("ALMA_MENU_TOP_NAV_Search_Text").value = text;
+
+    // Submit the search
+    document.getElementById("simpleSearchBtn").click();
+}
+
+
+/**
  * Set defaults for a linking session
  * @param {[object]} request chrome message request
  */
