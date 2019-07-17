@@ -14,7 +14,7 @@ welcomes collaboration with other Alma library installations to further develop 
 
 ## Installation
 ### Stable Release
-If you wish to install the current stable release of the Chrome extension on your machine you can follow [this](https://chrome.google.com/webstore/detail/hj-alma-booster/ghacelnoihffpganbhbbbonpjjpfjknf?authuser=1) link to the Chrome Web Store and click add to Chrome.
+If you wish to install the current stable release of the Chrome extension on your machine you can follow [this](https://chrome.google.com/webstore/detail/hj-alma-booster/ghacelnoihffpganbhbbbonpjjpfjknf?authuser=1) link to the Chrome Web Store and click add to Chrome. Contact Elizabeth Vernon of the Harvard Library Judaica Division at juddiv@fas.harvard.edu for the installation password.
 
 ### Developer Version
 If you wish to install a developer version of the extension then follow these steps;
