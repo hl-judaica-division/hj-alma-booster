@@ -1,5 +1,5 @@
 # HJ Alma Booster
-A lightweight Chrome extension for boosting productivity in Alma
+A lightweight Chrome extension for boosting productivity in the Alma online library services platform environment.
 
 ## Introduction
 The HJ Alma Booster (Harvard Library Judaica Division Alma Booster Chrome Extension) was created—and
