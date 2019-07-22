@@ -63,12 +63,12 @@ function update_help_page() {
             "message": "Couldn't find username from Alma",
             "explain": `This message appears when the extension is unable to locate your username on the Alma page. This only occurs\
             when you change your settings to autofill for the cataloguer field. This generally only occurs when Alma is not open in\
-            Chrome. If Alma is open then there may have been an update that causes an error, in which case please e-mail us\
+            the focussed tab in Chrome. If Alma is open then there may have been an update that causes an error, in which case please e-mail us\
             about the issue (there's a link at the end of this page).`,
         }, {
             "message": "Couldn't find encoding level from Alma",
             "explain": `This message appears when the extension is unable to locate the encoding level of the record on the Alma page.\
-            This generally only occurs when Alma is not open in Chrome or if you haven't got the record open.\
+            This generally only occurs when Alma is not open in the focussed tab in Chrome or if you haven't got the record open.\
             If Alma is open then there may have been an update that causes an error, in which case please e-mail us\
             about the issue (there's a link at the end of this page).`,
         }, {
