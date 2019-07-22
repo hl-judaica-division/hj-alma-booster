@@ -24,14 +24,14 @@
         {
             "run_at": "document_end",
             "matches": [
-                "https://hvd.alma.exlibrisgroup.com/*"
+                "https://*.alma.exlibrisgroup.com/*"
             ],
             "js": ["js/fontawesome-all.js"]
         },
         {
             "run_at": "document_end",
             "matches": [
-                "https://hvd.alma.exlibrisgroup.com/mng/action/home.do*"
+                "https://*.alma.exlibrisgroup.com/mng/action/home.do*"
             ],
             "js": ["content_scripts/alma.js"]
         }
