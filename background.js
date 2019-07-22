@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(function(object) {
 
 // ensure embedded buttons are added every time Alma refreshes
 chrome.tabs.onUpdated.addListener(function(id, changes, tab) {
-    if (tab.url.substr(0, 53) === "https://hvd.alma.exlibrisgroup.com/mng/action/home.do" || tab.url.substr(0, 62) === "https://sandbox01-na.alma.exlibrisgroup.com/mng/action/home.do") {
+    if (tab.url.includes("alma.exlibrisgroup.com/mng/action/home.do")) {
         chrome.tabs.sendMessage(id, {
             greeting: "add_buttons",
         });
@@ -33,6 +33,10 @@ chrome.runtime.onMessage.addListener(
             };
             xhr.send('');
             return true;
+        } else if (request.greeting == "open_help") {
+            chrome.tabs.create({
+                "url": "../html/help.html",
+            });
         }
     }
 );

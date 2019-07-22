@@ -409,7 +409,7 @@ function add_buttons() {
             const unique = document.getElementById("pageBeanuniqueIdentifier").innerText;
             print_invoice(unique);
         });
-    } else if (MD_back !== null && document.getElementById("judaica_MD_print_button") === null && document.title === "MD Editor") {
+    } else if (MD_back !== null && document.getElementById("judaica_MD_print_button") === null && title === "MD Editor") {
         // Metadata editor buttons
         const MD_print = inject_button("judaica_MD_print_button", "print");
         MD_print.addEventListener("click", function() {
@@ -439,6 +439,20 @@ function add_buttons() {
             }, 100);
         });
         MD_back.parentElement.insertBefore(MD_print, MD_back);
+    } else if (title == "Ex Libris - Alma" && document.getElementById("welcome_booster") === null && document.querySelector(".welcome_second_part") !== null) {
+        const new_welcome = document.createElement("div");
+        const style = document.createElement("style");
+        style.innerText = "#welcome_booster {color: #ef3d13; cursor: pointer} #welcome_booster:hover {text-decoration:underline};";
+        new_welcome.className = "welcome_second_part";
+        new_welcome.innerHTML = `<div class="welcome_devider">|</div>Boosters Active`;
+        new_welcome.id = "welcome_booster";
+        new_welcome.addEventListener("click", function() {
+            chrome.runtime.sendMessage({
+                "greeting": "open_help",
+            });
+        });
+        document.head.appendChild(style);
+        document.querySelector(".welcome_second_part").parentElement.appendChild(new_welcome);
     }
 }
 
