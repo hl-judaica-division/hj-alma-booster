@@ -745,8 +745,8 @@ function stats_prep(get_cat) {
                 document.getElementById("api_stats_cataloguer").value = cat;
                 check_stats_input("api_stats_cataloguer", "api_stats_string_cataloguer", "f");
             } else {
-                create_alert_in_element(document.getElementById("stats_error"), "Couldn't find username from Alma");
-                create_alert_in_element(document.getElementById("api_stats_error"), "Couldn't find username from Alma");
+                create_alert_in_element(document.getElementById("stats_error"), "Couldn't find username from Alma. Is Alma open?");
+                create_alert_in_element(document.getElementById("api_stats_error"), "Couldn't find username from Alma. Is Alma open?");
             }
         });
     }
@@ -757,7 +757,7 @@ function stats_prep(get_cat) {
             document.getElementById("stats_enc").value = response.encoding;
             check_stats_input("stats_enc", "stats_string_enc", "g");
         } else {
-            create_alert_in_element(document.getElementById("stats_error"), "Couldn't find encoding level from Alma");
+            create_alert_in_element(document.getElementById("stats_error"), "Couldn't find encoding level from Alma. Is Alma open?");
         }
         if (response.mms_id) {
             if (response.mms_id.substr(0, 2) !== "99") {
