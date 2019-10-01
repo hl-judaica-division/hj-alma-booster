@@ -345,63 +345,7 @@ $(function() {
     });
 
     document.getElementById("api_stats_bib_go").addEventListener("click", function() {
-        if (!key) {
-            create_alert_in_element("api_stats_error", "No API key stored in settings");
-            return;
-        }
-        $("#api_stats_record_selection").fadeOut(function() {
-            $("#api_stats_holding_selection").fadeIn();
-            const mms_id = document.getElementById("api_stats_bib").value;
-            $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "?apikey=" + key, function(bib, status) {
-                const LDR = bib.querySelector("leader");
-                let enc = LDR.textContent.substring(17, 18);
-                if (enc === " ") {
-                    enc = "#";
-                }
-                $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "/holdings?apikey=" + key, function(data, status) {
-                    console.log(data, status);
-                    if (status != "success") {
-                        console.log("API error", data, status);
-                        return;
-                    }
-                    $("#api_stats_holdings_loading").fadeOut(function() {
-                        const holdings = data.querySelectorAll("holding");
-                        if (holdings.length == 1) {
-                            api_stats_prep(mms_id, holdings[0].querySelector("holding_id").textContent, enc, "#api_stats_holdings");
-                        } else {
-                            for (let i = 0; i < holdings.length; i++) {
-                                const list = document.getElementById("api_stats_holdings");
-                                const new_item = document.createElement("a");
-                                new_item.className = "list-group-item list-group-item-action stat-li";
-
-                                const cont = document.createElement("div");
-                                cont.className = "d-flex w-100 justify-content-between";
-
-                                const title = document.createElement("h6");
-                                title.innerText = holdings[i].querySelector("library").getAttribute("desc") + " - " + holdings[i].querySelector("location").getAttribute("desc");
-
-                                const id = document.createElement("small");
-                                id.innerText = holdings[i].querySelector("holding_id").textContent;
-
-                                cont.appendChild(title);
-                                cont.appendChild(id);
-                                new_item.appendChild(cont);
-                                new_item.href = "#";
-                                list.appendChild(new_item);
-
-                                new_item.addEventListener("click", function() {
-                                    api_stats_prep(mms_id, this.querySelector("small").innerText, enc, "#api_stats_holdings");
-                                });
-
-                                setTimeout(function() {
-                                    new_item.classList.add("show");
-                                }, 10);
-                            }
-                        }
-                    });
-                });
-            });
-        });
+        api_stats_bib_go();
     });
     document.getElementById("api_stats_go").addEventListener("click", function() {
         api_stats_go();
@@ -602,6 +546,88 @@ function check_stats_input(input_id, output_id, subfield) {
 }
 
 /**
+ * Initialise the Statistics utility using APIs
+ */
+function api_stats_bib_go() {
+    // stop if the user hasn't entered an API key
+    if (!key) {
+        create_alert_in_element("api_stats_error", "No API key stored in settings");
+        return;
+    }
+
+    // fade in the next section
+    $("#api_stats_record_selection").fadeOut(function() {
+        $("#api_stats_holding_selection").fadeIn();
+
+        // request the bib record from the Alma
+        const mms_id = document.getElementById("api_stats_bib").value;
+        $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "?apikey=" + key, function(bib, status) {
+            if (status != "success") {
+                console.log("API error", data, status);
+                return;
+            }
+
+            // extract the encoding level from the record
+            const LDR = bib.querySelector("leader");
+            let enc = LDR.textContent.substring(17, 18);
+            if (enc === " ") {
+                enc = "#";
+            }
+
+            // request the list of holding records associated with this bib record
+            $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "/holdings?apikey=" + key, function(data, status) {
+                if (status != "success") {
+                    console.log("API error", data, status);
+                    return;
+                }
+
+                // remove the loading screen
+                $("#api_stats_holdings_loading").fadeOut(function() {
+                    const holdings = data.querySelectorAll("holding");
+
+                    // if there is only one holding record, automatically select this one
+                    if (holdings.length == 1) {
+                        api_stats_prep(mms_id, holdings[0].querySelector("holding_id").textContent, enc, "#api_stats_holdings");
+                    } else {
+                        // reformat the holdings list for the users
+                        for (let i = 0; i < holdings.length; i++) {
+                            const list = document.getElementById("api_stats_holdings");
+                            const new_item = document.createElement("a");
+                            new_item.className = "list-group-item list-group-item-action stat-li";
+
+                            const cont = document.createElement("div");
+                            cont.className = "d-flex w-100 justify-content-between";
+
+                            const title = document.createElement("h6");
+                            title.innerText = holdings[i].querySelector("library").getAttribute("desc") + " - " + holdings[i].querySelector("location").getAttribute("desc");
+
+                            const id = document.createElement("small");
+                            id.innerText = holdings[i].querySelector("holding_id").textContent;
+
+                            cont.appendChild(title);
+                            cont.appendChild(id);
+                            new_item.appendChild(cont);
+                            new_item.href = "#";
+                            list.appendChild(new_item);
+
+                            // when clicked, select this holding record
+                            new_item.addEventListener("click", function() {
+                                api_stats_prep(mms_id, this.querySelector("small").innerText, enc, "#api_stats_holdings");
+                            });
+
+                            // produces 'animated' effect by delaying
+                            setTimeout(function() {
+                                new_item.classList.add("show");
+                            }, 10);
+                        }
+                    }
+                });
+            });
+        });
+    });
+}
+
+/**
  * Prepare to create a statistic using APIs
  * @param {[string]} bib        bib id
  * @param {[string]} holding    holding id
@@ -613,6 +639,7 @@ function api_stats_prep(bib, holding, enc, fadeoutid) {
     document.getElementById("api_stats_holding_id").innerText = holding;
     document.getElementById("api_stats_enc").value = enc;
     $(fadeoutid).fadeOut(function() {
+        // present the next input screen (statistics concludes with api_stats_go function)
         $("#api_stats_input").fadeIn();
     });
 }
@@ -622,10 +649,12 @@ function api_stats_prep(bib, holding, enc, fadeoutid) {
  * @return {[boolean]} on failure
  */
 function api_stats_go() {
+    // remove the input page and present a loading screen which turns into feedback
     $("#api_stats_input").fadeOut(function() {
         $("#api_stats_feedback").fadeIn();
     });
 
+    // this next section constructs the 920 field and ensures all of the necessary subfields are present and correct
     const bib_id = document.getElementById("api_stats_bib_id").innerText;
     const holding_id = document.getElementById("api_stats_holding_id").innerText;
     const new_field = document.createElement("datafield");
@@ -651,10 +680,11 @@ function api_stats_go() {
             new_field.appendChild(new_sub);
         }
     }
-    console.log(new_field);
+
+    // now get this specific holding record content (so that we can insert the 920 field)
     const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "?apikey=" + key;
     $.get(url, function(holding, status) {
-        console.log(holding);
+        // check that the field is not already present and throw an error if this is the case
         const checks = fields = holding.querySelectorAll("datafield[tag='920']");
         if (checks.length != 0) {
             console.log(checks, "ERROR HERE");
@@ -672,10 +702,12 @@ function api_stats_go() {
             });
             return;
         }
+
+        // add the new field!
         holding.querySelector("record").appendChild(new_field);
-        console.log(holding);
+
+        // format the holding for an http request and update it using the api
         const new_holding_string = new XMLSerializer().serializeToString(holding.documentElement);
-        console.log(new_holding_string);
         $.ajax({
             url: url,
             method: "PUT",
