@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -44,6 +44,9 @@
                     </li>
                     <li class="nav-item w-100">
                         <a class="nav-link pane-link pane-link-action pane-1" href="#" tabindex="-1" data-focus-box="#linking_item_callnum">Linking</a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a class="nav-link pane-link pane-link-action pane-1" href="#" tabindex="-1" data-focus-box="">Periodicals</a>
                     </li>
                     <li class="nav-item w-100">
                         <a class="nav-link pane-link pane-link-action pane-1" style="display:inline" href="#" tabindex="-1" data-focus-box="">API Statistics</a><span class="badge badge-warning" style="display: inline">BETA</span>
@@ -233,6 +236,96 @@
                                         <input id="linking_check_barcode" class="form-control" placeholder="Box Barcode" data-enter-target="linking_check">
                                         <button type="button" class="btn btn-outline-light" id="linking_check">Check Linking</button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="periodicals_error" class="carousel-item pane">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <h4 class="text-center">Periodicals</h4>
+                                </div>
+                            </div>
+                            <hr />
+                            <div id="periodicals_record_selection" class="row">
+                                <div class="col">
+                                    <p class="mb-1">MMS ID lookup with Call Number</p>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-sort-numeric-down"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_callnum" class="form-control" placeholder="Call Number" data-enter-target="periodicals_callnum_search" />
+                                        <div class="input-group-append">
+                                            <button id="periodicals_callnum_search" class="btn btn-outline-light">Search</button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-file-invoice"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_bib" class="form-control" placeholder="Bibliographic MMS ID" data-enter-target="periodicals_bib_go" />
+                                        <div class="input-group-append">
+                                            <button id="periodicals_bib_go" class="btn btn-outline-light">Go</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="periodicals_holding_selection" class="row hide">
+                                <div class="col">
+                                    <h5 id="periodicals_holding_loading" class="text-center">Locating holding records <i class="fa fa-spin fa-circle-notch"></i></h5>
+                                    <div id="periodicals_holdings" class="list-group swing"></div>
+                                </div>
+                            </div>
+                            <div id="periodicals_input" class="row hide">
+                                <div class="col">
+                                    <div class="row mb-2 text-center">
+                                        <div class="col">
+                                            Bib: <span id="periodicals_bib_id"></span>
+                                        </div>
+                                        <div class="col">
+                                            Holding: <span id="periodicals_holding_id"></span>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col text-center m-auto">
+                                            <button id="periodicals_go" class="btn btn-outline-light">Record</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="periodicals_feedback" class="row hide">
+                                <div class="col">
+                                    <h5 id="periodicals_feedback_loading" class="text-center">Recording Statistic <i class="fa fa-spin fa-circle-notch"></i></h5>
+                                    <h5 id="periodicals_feedback_success" class="text-center hide">Statistic Recorded <i class="fa fa-check"></i></h5>
+                                    <h5 id="periodicals_feedback_failure" class="text-center hide">Error: <span id="periodicals_failure_reason"></span> <i class="fa fa-exclamation-circle"></i></h5>
+                                    <hr>
+                                    <table id="periodicals_old_stat" class="table hide">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Unit</th>
+                                                <th scope="col">Cataloguer</th>
+                                                <th scope="col">Encoding</th>
+                                                <th scope="col">Note</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="a"></td>
+                                                <td class="d"></td>
+                                                <td class="e"></td>
+                                                <td class="f"></td>
+                                                <td class="g"></td>
+                                                <td class="x"></td>
+                                            </tr>
+                                        </tbody>
+                                      </table>
                                 </div>
                             </div>
                         </div>

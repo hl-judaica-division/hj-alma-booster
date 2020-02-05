@@ -345,7 +345,7 @@ $(function() {
     });
 
     document.getElementById("api_stats_bib_go").addEventListener("click", function() {
-        api_stats_bib_go();
+        api_bib_go("api_stats");
     });
     document.getElementById("api_stats_go").addEventListener("click", function() {
         api_stats_go();
@@ -418,6 +418,19 @@ $(function() {
     for (let i = 0; i < stats_radios.length; i++) {
         radioObserver.observe(stats_radios[i], radio_config);
     }
+
+    document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
+        console.log("running");
+        console.log(document.getElementById("periodicals_callnum").value);
+        send_active_message({
+            "greeting": "periodicals_set_mmsid",
+            "callnum": document.getElementById("periodicals_callnum").value,
+        });
+        document.getElementById("periodicals_bib").focus();
+    });
+    document.getElementById("periodicals_bib_go").addEventListener("click", function() {
+        api_bib_go("periodicals");
+    });
 });
 
 // ------------------------------------------------------------------------------------------------
@@ -499,9 +512,13 @@ function send_active_message(message, callback) {
         active: true,
         currentWindow: true,
     }, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, message, function(response) {
-            callback(response);
-        });
+        if (callback) {
+            chrome.tabs.sendMessage(tabs[0].id, message, function(response) {
+                callback(response);
+            });
+        } else {
+            chrome.tabs.sendMessage(tabs[0].id, message);
+        }
     });
 }
 
@@ -547,20 +564,22 @@ function check_stats_input(input_id, output_id, subfield) {
 
 /**
  * Initialise the Statistics utility using APIs
+ * @param {[string]} prefix prefix for element names
  */
-function api_stats_bib_go() {
+function api_bib_go(prefix) {
     // stop if the user hasn't entered an API key
     if (!key) {
-        create_alert_in_element("api_stats_error", "No API key stored in settings");
+        console.log("no key");
+        create_alert_in_element(document.getElementById(prefix + "_error"), "No API key stored in settings");
         return;
     }
 
     // fade in the next section
-    $("#api_stats_record_selection").fadeOut(function() {
-        $("#api_stats_holding_selection").fadeIn();
+    $("#" + prefix + "_record_selection").fadeOut(function() {
+        $("#" + prefix + "_holding_selection").fadeIn();
 
         // request the bib record from the Alma
-        const mms_id = document.getElementById("api_stats_bib").value;
+        const mms_id = document.getElementById(prefix + "_bib").value;
         $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "?apikey=" + key, function(bib, status) {
             if (status != "success") {
                 console.log("API error", data, status);
@@ -580,18 +599,24 @@ function api_stats_bib_go() {
                     console.log("API error", data, status);
                     return;
                 }
-
+                console.log("check here");
                 // remove the loading screen
-                $("#api_stats_holdings_loading").fadeOut(function() {
+                $("#" + prefix + "_holdings_loading").fadeOut(function() {
                     const holdings = data.querySelectorAll("holding");
-
+                    console.log(holdings);
                     // if there is only one holding record, automatically select this one
                     if (holdings.length == 1) {
-                        api_stats_prep(mms_id, holdings[0].querySelector("holding_id").textContent, enc, "#api_stats_holdings");
+                        details = {
+                            "prefix": prefix,
+                            "bib": mms_id,
+                            "holding": holdings[0].querySelector("holding_id").textContent,
+                            "enc": enc,
+                        };
+                        holdings_prep(details);
                     } else {
                         // reformat the holdings list for the users
                         for (let i = 0; i < holdings.length; i++) {
-                            const list = document.getElementById("api_stats_holdings");
+                            const list = document.getElementById(prefix + "_holdings");
                             const new_item = document.createElement("a");
                             new_item.className = "list-group-item list-group-item-action stat-li";
 
@@ -612,7 +637,13 @@ function api_stats_bib_go() {
 
                             // when clicked, select this holding record
                             new_item.addEventListener("click", function() {
-                                api_stats_prep(mms_id, this.querySelector("small").innerText, enc, "#api_stats_holdings");
+                                details = {
+                                    "prefix": prefix,
+                                    "bib": mms_id,
+                                    "holding": this.querySelector("small").innerText,
+                                    "enc": enc,
+                                };
+                                holdings_prep(details);
                             });
 
                             // produces 'animated' effect by delaying
@@ -629,18 +660,17 @@ function api_stats_bib_go() {
 
 /**
  * Prepare to create a statistic using APIs
- * @param {[string]} bib        bib id
- * @param {[string]} holding    holding id
- * @param {[string]} enc        encoding level
- * @param {[string]} fadeoutid  id of element to fade out
+ * @param {[object]} details details about the elements
  */
-function api_stats_prep(bib, holding, enc, fadeoutid) {
-    document.getElementById("api_stats_bib_id").innerText = bib;
-    document.getElementById("api_stats_holding_id").innerText = holding;
-    document.getElementById("api_stats_enc").value = enc;
-    $(fadeoutid).fadeOut(function() {
+function holdings_prep(details) {
+    document.getElementById(details.prefix + "_bib_id").innerText = details.bib;
+    document.getElementById(details.prefix + "_holding_id").innerText = details.holding;
+    if (details.enc) {
+        document.getElementById(details.prefix + "_enc").value = details.enc;
+    }
+    $("#" + details.prefix + "_holdings").fadeOut(function() {
         // present the next input screen (statistics concludes with api_stats_go function)
-        $("#api_stats_input").fadeIn();
+        $("#" + details.prefix + "_input").fadeIn();
     });
 }
 

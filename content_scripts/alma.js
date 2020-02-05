@@ -51,6 +51,8 @@ chrome.runtime.onMessage.addListener(
             intro(sendResponse);
         } else if (request.greeting === "record_information") {
             md_record_information(sendResponse);
+        } else if (request.greeting === "periodicals_set_mmsid") {
+            periodicals_set_mmsid(request);
         }
     }
 );
@@ -765,6 +767,26 @@ function alma_simple_search(type, subtype, text) {
 
     // Submit the search
     document.getElementById("simpleSearchBtn").click();
+}
+
+/**
+ * Find MMS ID from Call number
+ * @param {[object]} request chrome message request
+ */
+function periodicals_set_mmsid(request) {
+    console.log("hello there");
+    alma_simple_search("Physical Titles", "Permanent Call Number", request.callnum);
+    wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(el) {
+        const copy_el = document.createElement("input");
+        copy_el.value = el.title;
+        copy_el.id = "judaica_copying";
+        document.body.appendChild(copy_el);
+        copy_el.select();
+        document.execCommand("copy");
+        copy_el.blur();
+        copy_el.parentElement.removeChild(copy_el);
+        window.location.reload();
+    });
 }
 
 
