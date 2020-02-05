@@ -431,6 +431,9 @@ $(function() {
     document.getElementById("periodicals_bib_go").addEventListener("click", function() {
         api_bib_go("periodicals");
     });
+    document.getElementById("periodicals_go").addEventListener("click", function() {
+        periodicals_record();
+    });
 });
 
 // ------------------------------------------------------------------------------------------------
@@ -594,6 +597,7 @@ function api_bib_go(prefix) {
             }
 
             // request the list of holding records associated with this bib record
+            console.log("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "/holdings?apikey=" + key);
             $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "/holdings?apikey=" + key, function(data, status) {
                 if (status != "success") {
                     console.log("API error", data, status);
@@ -610,7 +614,7 @@ function api_bib_go(prefix) {
                             "prefix": prefix,
                             "bib": mms_id,
                             "holding": holdings[0].querySelector("holding_id").textContent,
-                            "enc": enc,
+                            "enc": enc ? prefix == "api_stats": null,
                         };
                         holdings_prep(details);
                     } else {
@@ -641,7 +645,7 @@ function api_bib_go(prefix) {
                                     "prefix": prefix,
                                     "bib": mms_id,
                                     "holding": this.querySelector("small").innerText,
-                                    "enc": enc,
+                                    "enc": enc ? prefix == "api_stats": null,
                                 };
                                 holdings_prep(details);
                             });
@@ -754,6 +758,54 @@ function api_stats_go() {
                 document.getElementById("api_stats_failure_reason").innerText = "Write failed with code " + status;
                 $("#api_stats_feedback_loading").fadeOut(function() {
                     $("#api_stats_feedback_failure").fadeIn();
+                });
+            },
+        });
+    });
+}
+
+function periodicals_record() {
+    // remove the input page and present a loading screen which turns into feedback
+    $("#periodicals_input").fadeOut(function() {
+        $("#periodicals_feedback").fadeIn();
+    });
+
+    // this next section constructs the 920 field and ensures all of the necessary subfields are present and correct
+    const bib_id = document.getElementById("periodicals_bib_id").innerText;
+    const holding_id = document.getElementById("periodicals_holding_id").innerText;
+
+    // now get this specific holding record content (so that we can insert the 920 field)
+    const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "/items?apikey=" + key;
+    $.get(url, function(items, status) {
+        // add the new field!
+
+        const old_item = items.querySelector("item");
+        let new_item = old_item.cloneNode(true);
+        console.log(new_item.querySelector("item_data"));
+        console.log(new_item.querySelector("item_data barcode"));
+        console.log(new_item.querySelector("item_data barcode").innerText);
+        console.log(new_item.querySelector("item_data barcode").textContent);
+        new_item.querySelector("item_data pid").textContent = "";
+        new_item.querySelector("item_data barcode").textContent = "1234";
+        console.log(new_item);
+
+        const new_items_string = new XMLSerializer().serializeToString(new_item);
+        $.ajax({
+            url: url,
+            method: "POST",
+            contentType: "application/xml",
+            data: new_items_string,
+            success: function(data, status) {
+                console.log(data, status);
+                $("#periodicals_feedback_loading").fadeOut(function() {
+                    $("#periodicals_feedback_success").fadeIn();
+                });
+            },
+            failure: function(data, status) {
+                console.log("FAIL", data, status);
+                document.getElementById("periodicals_failure_reason").innerText = "Write failed with code " + status;
+                $("#periodicals_feedback_loading").fadeOut(function() {
+                    $("#periodicals_feedback_failure").fadeIn();
                 });
             },
         });
