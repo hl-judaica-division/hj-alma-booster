@@ -246,7 +246,7 @@
                                 </div>
                             </div>
                             <hr />
-                            <div id="periodicals_record_selection" class="row">
+                            <div id="periodicals_record_selection" class="row hide">
                                 <div class="col">
                                     <p class="mb-1">MMS ID lookup with Call Number</p>
                                     <div class="input-group mb-2">
@@ -280,7 +280,7 @@
                                     <div id="periodicals_holdings" class="list-group swing"></div>
                                 </div>
                             </div>
-                            <div id="periodicals_input" class="row hide">
+                            <div id="periodicals_input" class="row">
                                 <div class="col">
                                     <div class="row mb-2 text-center">
                                         <div class="col">
@@ -293,9 +293,34 @@
                                         </div>
                                     </div>
                                     <hr />
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-barcode"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_barcode" class="form-control" placeholder="Barcode">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="far fa-fw fa-calendar-alt"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_chron" class="form-control" placeholder="Chron i">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-calculator"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_enuma" class="form-control" placeholder="Enum a">
+                                        <input id="periodicals_enumb" class="form-control" placeholder="Enum b">
+                                    </div>
                                     <div class="row">
                                         <div class="col text-center m-auto">
-                                            <button id="periodicals_go" class="btn btn-outline-light">Record</button>
+                                            <button id="periodicals_go" class="btn w-50 btn-outline-light">Record</button>
                                         </div>
                                     </div>
                                 </div>

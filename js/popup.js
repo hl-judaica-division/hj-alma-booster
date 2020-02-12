@@ -780,7 +780,7 @@ function periodicals_record() {
         // add the new field!
 
         const old_item = items.querySelector("item");
-        let new_item = old_item.cloneNode(true);
+        const new_item = old_item.cloneNode(true);
         console.log(new_item.querySelector("item_data"));
         console.log(new_item.querySelector("item_data barcode"));
         console.log(new_item.querySelector("item_data barcode").innerText);
