@@ -614,7 +614,7 @@ function api_bib_go(prefix) {
                             "prefix": prefix,
                             "bib": mms_id,
                             "holding": holdings[0].querySelector("holding_id").textContent,
-                            "enc": enc ? prefix == "api_stats": null,
+                            "enc": prefix == "api_stats" ? enc : null,
                         };
                         holdings_prep(details);
                     } else {
@@ -645,7 +645,7 @@ function api_bib_go(prefix) {
                                     "prefix": prefix,
                                     "bib": mms_id,
                                     "holding": this.querySelector("small").innerText,
-                                    "enc": enc ? prefix == "api_stats": null,
+                                    "enc": prefix == "api_stats" ? enc : null,
                                 };
                                 holdings_prep(details);
                             });
@@ -718,6 +718,14 @@ function api_stats_go() {
     // now get this specific holding record content (so that we can insert the 920 field)
     const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "?apikey=" + key;
     $.get(url, function(holding, status) {
+
+        let filename = 'Alma_backup_statistics_' + bib_id + '_' + holding_id + '.xml';
+        let downloader = document.createElement('a');
+        let bb = new Blob([new XMLSerializer().serializeToString(holding.documentElement)], {type: 'text/xml'});
+
+        downloader.setAttribute('href', window.URL.createObjectURL(bb));
+        downloader.setAttribute('download', filename);
+
         // check that the field is not already present and throw an error if this is the case
         const checks = fields = holding.querySelectorAll("datafield[tag='920']");
         if (checks.length != 0) {
@@ -742,6 +750,7 @@ function api_stats_go() {
 
         // format the holding for an http request and update it using the api
         const new_holding_string = new XMLSerializer().serializeToString(holding.documentElement);
+
         $.ajax({
             url: url,
             method: "PUT",
@@ -752,6 +761,7 @@ function api_stats_go() {
                 $("#api_stats_feedback_loading").fadeOut(function() {
                     $("#api_stats_feedback_success").fadeIn();
                 });
+                downloader.click();
             },
             failure: function(data, status) {
                 console.log("FAIL", data, status);
@@ -835,6 +845,7 @@ function stats_prep(get_cat) {
     send_active_message({
         "greeting": "record_information",
     }, function(response) {
+        console.log(response.encoding);
         if (response.encoding) {
             document.getElementById("stats_enc").value = response.encoding;
             check_stats_input("stats_enc", "stats_string_enc", "g");
