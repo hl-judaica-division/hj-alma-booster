@@ -608,12 +608,14 @@ function api_bib_go(prefix) {
                 $("#" + prefix + "_holdings_loading").fadeOut(function() {
                     const holdings = data.querySelectorAll("holding");
                     console.log(holdings);
+                    console.log();
                     // if there is only one holding record, automatically select this one
                     if (holdings.length == 1) {
                         details = {
                             "prefix": prefix,
                             "bib": mms_id,
                             "holding": holdings[0].querySelector("holding_id").textContent,
+                            "location": holdings[0].querySelector("location").textContent,
                             "enc": prefix == "api_stats" ? enc : null,
                         };
                         holdings_prep(details);
@@ -628,7 +630,7 @@ function api_bib_go(prefix) {
                             cont.className = "d-flex w-100 justify-content-between";
 
                             const title = document.createElement("h6");
-                            title.innerText = holdings[i].querySelector("library").getAttribute("desc") + " - " + holdings[i].querySelector("location").getAttribute("desc");
+                            title.innerHTML = holdings[i].querySelector("library").getAttribute("desc") + " - <span class='location'>" + holdings[i].querySelector("location").getAttribute("desc") + '</span>';
 
                             const id = document.createElement("small");
                             id.innerText = holdings[i].querySelector("holding_id").textContent;
@@ -645,6 +647,7 @@ function api_bib_go(prefix) {
                                     "prefix": prefix,
                                     "bib": mms_id,
                                     "holding": this.querySelector("small").innerText,
+                                    "location": this.querySelector("location").innerText,
                                     "enc": prefix == "api_stats" ? enc : null,
                                 };
                                 holdings_prep(details);
@@ -671,6 +674,9 @@ function holdings_prep(details) {
     document.getElementById(details.prefix + "_holding_id").innerText = details.holding;
     if (details.enc) {
         document.getElementById(details.prefix + "_enc").value = details.enc;
+    }
+    if (details.location) {
+        document.getElementById(details.prefix + "_location").innerText = details.location;
     }
     $("#" + details.prefix + "_holdings").fadeOut(function() {
         // present the next input screen (statistics concludes with api_stats_go function)
@@ -787,16 +793,57 @@ function periodicals_record() {
     // now get this specific holding record content (so that we can insert the 920 field)
     const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "/items?apikey=" + key;
     $.get(url, function(items, status) {
-        // add the new field!
-
         const old_item = items.querySelector("item");
         const new_item = old_item.cloneNode(true);
-        console.log(new_item.querySelector("item_data"));
-        console.log(new_item.querySelector("item_data barcode"));
-        console.log(new_item.querySelector("item_data barcode").innerText);
-        console.log(new_item.querySelector("item_data barcode").textContent);
-        new_item.querySelector("item_data pid").textContent = "";
-        new_item.querySelector("item_data barcode").textContent = "1234";
+        new_item.removeChild(new_item.querySelector("item_data"))
+        
+        // create item data and add all fields
+        const item_data = document.createElement("item_data");
+
+        const barcode = document.createElement("barcode");
+        barcode.innerHTML = document.getElementById("periodicals_barcode").value;
+        item_data.appendChild(barcode);
+
+        const date = document.createElement("creation_date");
+        const dobj = new Date();
+        const d = dobj.getDate();
+        const m = dobj.getMonth() + 1;
+        const yyyy = dobj.getFullYear().toString();
+        const dd = d < 10 ? "0" + d.toString() : d.toString();
+        const mm = m < 10 ? "0" + m.toString() : m.toString();
+        date.innerHTML = yyyy + "-" + mm + "-" + dd;
+        item_data.appendChild(date);
+
+        const pmt = document.createElement("physical_material_type");
+        pmt.innerHTML = "ISSBD";
+        pmt.setAttribute("desc", "Bound Issue")
+        item_data.appendChild(pmt);
+
+        const policy = document.createElement("policy");
+        const loc = document.getElementById("periodicals_location").innerText;
+        if (loc.includes("HDJUD")) {
+            policy.innerHTML = 91;
+        } else if (loc.includes("GEN") || loc.includes("WIDLC")) {
+            policy.innerHTML = 02;
+        } else {
+            policy.innerHTML = "UNKNOWN LOCATION";
+        }
+        item_data.appendChild(policy);
+
+        const enuma = document.createElement("enumeration_a");
+        enuma.innerHTML = document.getElementById("periodicals_enuma").value;
+        item_data.appendChild(enuma);
+
+        const enumb = document.createElement("enumeration_b");
+        enumb.innerHTML = document.getElementById("periodicals_enumb").value;
+        item_data.appendChild(enumb);
+
+        const chroni = document.createElement("chronology_i");
+        chroni.innerHTML = document.getElementById("periodicals_chroni").value;
+        item_data.appendChild(chroni);
+
+        new_item.appendChild(item_data);
+
         console.log(new_item);
 
         const new_items_string = new XMLSerializer().serializeToString(new_item);

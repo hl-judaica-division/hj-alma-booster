@@ -246,7 +246,7 @@
                                 </div>
                             </div>
                             <hr />
-                            <div id="periodicals_record_selection" class="row hide">
+                            <div id="periodicals_record_selection" class="row">
                                 <div class="col">
                                     <p class="mb-1">MMS ID lookup with Call Number</p>
                                     <div class="input-group mb-2">
@@ -280,18 +280,25 @@
                                     <div id="periodicals_holdings" class="list-group swing"></div>
                                 </div>
                             </div>
-                            <div id="periodicals_input" class="row">
+                            <div id="periodicals_input" class="row hide">
                                 <div class="col">
                                     <div class="row mb-2 text-center">
                                         <div class="col">
-                                            Bib: <span id="periodicals_bib_id"></span>
+                                            Bibliographic MMS ID
+                                        </div>
+                                        <div class="col">
+                                            Holding MMS ID
                                         </div>
                                     </div>
                                     <div class="row mb-2 text-center">
                                         <div class="col">
-                                            Holding: <span id="periodicals_holding_id"></span>
+                                            <span id="periodicals_bib_id"></span>
+                                        </div>
+                                        <div class="col">
+                                            <span id="periodicals_holding_id"></span>
                                         </div>
                                     </div>
+                                    <span id="periodicals_location" class="hide"></span>
                                     <hr />
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -307,7 +314,7 @@
                                                 <i class="far fa-fw fa-calendar-alt"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_chron" class="form-control" placeholder="Chron i">
+                                        <input id="periodicals_chroni" class="form-control" placeholder="Chron i">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -317,6 +324,15 @@
                                         </div>
                                         <input id="periodicals_enuma" class="form-control" placeholder="Enum a">
                                         <input id="periodicals_enumb" class="form-control" placeholder="Enum b">
+                                    </div>
+                                    <h6 class="mb-1">Description Preview (Edit as necessary)</h6>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-pencil-alt"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_desc" class="form-control" placeholder="Description Preview">
                                     </div>
                                     <div class="row">
                                         <div class="col text-center m-auto">
