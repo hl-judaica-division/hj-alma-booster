@@ -407,6 +407,9 @@ $(function() {
     document.getElementById("periodicals_go").addEventListener("click", function() {
         periodicals_record();
     });
+    $("#periodicals_enuma, #periodicals_enumb, #periodicals_chroni").on("keyup", function() {
+        document.getElementById("periodicals_desc").value = construct_periodicals_description();
+    });
 });
 
 // ------------------------------------------------------------------------------------------------
@@ -770,35 +773,43 @@ function periodicals_record() {
         // make a copy of the old item
         const old_item = items.querySelector("item");
         const new_item = old_item.cloneNode(true);
-        new_item.removeChild(new_item.querySelector("item_data"))
-        
-        // create item data and add all fields
-        const item_data = document.createElement("item_data");
+
+        let item_data = new_item.querySelector("item_data");
+        for (let i = 0; i < item_data.childNodes.length; i++) {
+            if (item_data.getAttribute("desc") != null) {
+                item_data.childNodes[i].nodeValue = "";
+                item_data.childNodes[i].textContent = "";
+            }
+        }
 
         // get barcode from input
-        const barcode = document.createElement("barcode");
-        barcode.innerHTML = document.getElementById("periodicals_barcode").value;
-        item_data.appendChild(barcode);
+        item_data.querySelector("barcode").innerHTML = document.getElementById("periodicals_barcode").value;
 
         // write date in correct format
-        const date = document.createElement("creation_date");
+        // item_data.removeChild(item_data.querySelector("arrival_date"));
+        // item_data.removeChild(item_data.querySelector("creation_date"));
+        // item_data.removeChild(item_data.querySelector("modification_date"));
+        
         const dobj = new Date();
         const d = dobj.getDate();
         const m = dobj.getMonth() + 1;
         const yyyy = dobj.getFullYear().toString();
         const dd = d < 10 ? "0" + d.toString() : d.toString();
         const mm = m < 10 ? "0" + m.toString() : m.toString();
-        date.innerHTML = yyyy + "-" + mm + "-" + dd;
-        item_data.appendChild(date);
+
+        const date_string = yyyy + "-" + mm + "-" + dd + "Z";
+        console.log(date_string);
+        item_data.querySelector("arrival_date").innerHTML = date_string;
+        item_data.querySelector("creation_date").innerHTML = date_string;
+        item_data.querySelector("modification_date").innerHTML = date_string;
 
         // default value always the same
-        const pmt = document.createElement("physical_material_type");
+        const pmt = item_data.querySelector("physical_material_type");
         pmt.innerHTML = "ISSBD";
         pmt.setAttribute("desc", "Bound Issue")
-        item_data.appendChild(pmt);
 
         // change policy based location
-        const policy = document.createElement("policy");
+        const policy = item_data.querySelector("policy")
         const loc = document.getElementById("periodicals_location").innerText;
         if (loc.includes("HDJUD")) {
             policy.innerHTML = 91;
@@ -807,24 +818,15 @@ function periodicals_record() {
         } else {
             policy.innerHTML = "UNKNOWN LOCATION";
         }
-        item_data.appendChild(policy);
 
         // get enumerations and chronology from input
-        const enuma = document.createElement("enumeration_a");
-        enuma.innerHTML = document.getElementById("periodicals_enuma").value;
-        item_data.appendChild(enuma);
+        item_data.querySelector("enumeration_a").innerHTML = document.getElementById("periodicals_enuma").value;
+        item_data.querySelector("enumeration_b").innerHTML = document.getElementById("periodicals_enumb").value;
+        item_data.querySelector("chronology_i").innerHTML = document.getElementById("periodicals_chroni").value;
+        item_data.querySelector("description").innerHTML = document.getElementById("periodicals_desc").value;
 
-        const enumb = document.createElement("enumeration_b");
-        enumb.innerHTML = document.getElementById("periodicals_enumb").value;
-        item_data.appendChild(enumb);
-
-        const chroni = document.createElement("chronology_i");
-        chroni.innerHTML = document.getElementById("periodicals_chroni").value;
-        item_data.appendChild(chroni);
-
-        // add new item data to Item object
+        new_item.removeChild(new_item.querySelector("item_data"));
         new_item.appendChild(item_data);
-
         console.log(new_item);
 
         // convert object to string and POST to Alma API
@@ -849,6 +851,26 @@ function periodicals_record() {
             },
         });
     });
+}
+
+/**
+ * Construct a description for periodicals based on enuma,b and chron
+ */
+function construct_periodicals_description() {
+    const enuma = document.getElementById("periodicals_enuma").value;
+    const enumb = document.getElementById("periodicals_enumb").value;
+    const chroni = document.getElementById("periodicals_chroni").value;
+
+    let desc = "";
+    if (enuma != "") {
+        if (enumb == "") {
+            desc = "pt." + enuma + " (" + chroni + ")";
+        } else {
+            desc = "v." + enumb + ":pt." + enuma + " (" + chroni + ")";
+        }
+    }
+
+    return desc;
 }
 
 /**
