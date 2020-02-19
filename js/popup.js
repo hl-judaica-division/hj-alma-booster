@@ -5,7 +5,7 @@ let key = null;
 // -----------------------------------------------------------------------------------------------
 $(function() {
     // load in settings from chrome.storage
-    chrome.storage.sync.get(["user_type", "page", "alma_invoice", "alma_add_fund", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key"], function(items) {
+    chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key"], function(items) {
         // if they haven't used the extension before the immediately show lockscreen
         if (items.user_type === undefined || items.user_type === 3) {
             window.location.href = "../html/lockscreen.html";
@@ -19,9 +19,6 @@ $(function() {
         if (items.alma_invoice) {
             document.getElementById("invoice_vendor").value = items.alma_invoice["vendor"];
             document.getElementById("invoice_number").value = items.alma_invoice["number"];
-        }
-        if (items.alma_add_fund) {
-            document.getElementById("add_fund_code").value = items.alma_add_fund;
         }
         if (items.linking_defaults) {
             document.getElementById("linking_defaults_MMSID").value = items.linking_defaults.MMSID;
@@ -260,30 +257,6 @@ $(function() {
             invoice_action(this.id);
         });
     }
-
-    document.getElementById("add_fund").addEventListener("click", function() {
-        const fund_data = {
-            "code": document.getElementById("add_fund_code").value,
-            "line": document.getElementById("add_fund_line").value,
-        };
-        if (fund_data.code === "") {
-            create_alert_in_element(document.getElementById("add_fund_error"), "You must supply a fund code");
-            return;
-        }
-        if ([3, 6, 35].indexOf(fund_data.code.length) < 0) {
-            create_alert_in_element(document.getElementById("add_fund_error"), "The fund code must be 3, 6 or 35 digits long");
-            return;
-        }
-        send_active_message({
-            "greeting": "add_fund",
-            "fund_data": fund_data,
-        }, function(response) {
-            chrome.storage.sync.set({
-                "alma_add_fund": fund_data.code,
-            });
-            window.close();
-        });
-    });
 
     document.getElementById("linking_defaults_barcode").addEventListener("keyup", function() {
         if (this.value.length == 14) {
