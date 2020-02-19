@@ -759,13 +759,15 @@ function periodicals_record() {
         $("#periodicals_feedback").fadeIn();
     });
 
-    // this next section constructs the 920 field and ensures all of the necessary subfields are present and correct
+    // get the bib and holding id from page
     const bib_id = document.getElementById("periodicals_bib_id").innerText;
     const holding_id = document.getElementById("periodicals_holding_id").innerText;
 
-    // now get this specific holding record content (so that we can insert the 920 field)
+    // retrieve the current item list to get a default Item object
     const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "/items?apikey=" + key;
     $.get(url, function(items, status) {
+
+        // make a copy of the old item
         const old_item = items.querySelector("item");
         const new_item = old_item.cloneNode(true);
         new_item.removeChild(new_item.querySelector("item_data"))
@@ -773,10 +775,12 @@ function periodicals_record() {
         // create item data and add all fields
         const item_data = document.createElement("item_data");
 
+        // get barcode from input
         const barcode = document.createElement("barcode");
         barcode.innerHTML = document.getElementById("periodicals_barcode").value;
         item_data.appendChild(barcode);
 
+        // write date in correct format
         const date = document.createElement("creation_date");
         const dobj = new Date();
         const d = dobj.getDate();
@@ -787,11 +791,13 @@ function periodicals_record() {
         date.innerHTML = yyyy + "-" + mm + "-" + dd;
         item_data.appendChild(date);
 
+        // default value always the same
         const pmt = document.createElement("physical_material_type");
         pmt.innerHTML = "ISSBD";
         pmt.setAttribute("desc", "Bound Issue")
         item_data.appendChild(pmt);
 
+        // change policy based location
         const policy = document.createElement("policy");
         const loc = document.getElementById("periodicals_location").innerText;
         if (loc.includes("HDJUD")) {
@@ -803,6 +809,7 @@ function periodicals_record() {
         }
         item_data.appendChild(policy);
 
+        // get enumerations and chronology from input
         const enuma = document.createElement("enumeration_a");
         enuma.innerHTML = document.getElementById("periodicals_enuma").value;
         item_data.appendChild(enuma);
@@ -815,10 +822,12 @@ function periodicals_record() {
         chroni.innerHTML = document.getElementById("periodicals_chroni").value;
         item_data.appendChild(chroni);
 
+        // add new item data to Item object
         new_item.appendChild(item_data);
 
         console.log(new_item);
 
+        // convert object to string and POST to Alma API
         const new_items_string = new XMLSerializer().serializeToString(new_item);
         $.ajax({
             url: url,
