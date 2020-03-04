@@ -233,7 +233,7 @@
                                                 <i class="fas fa-fw fa-sort-numeric-down"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_callnum" class="form-control" placeholder="Weinberg Barcode 1" data-enter-tab="periodicals_chroni_prep">
+                                        <input id="periodicals_callnum" class="form-control" placeholder="Call Number" data-enter-tab="periodicals_chroni_prep">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -241,23 +241,23 @@
                                                 <i class="far fa-fw fa-calendar-alt"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_chroni_prep" class="form-control" placeholder="Weinberg Barcode 2">
+                                        <input id="periodicals_chroni_prep" class="form-control" placeholder="Year" data-enter-tab="periodicals_enuma_prep">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-fw fa-calculator"></i>
+                                                <i class="fas fa-fw fa-id-card"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enuma_prep" class="form-control" placeholder="Weinberg Barcode 3">
+                                        <input id="periodicals_enuma_prep" class="form-control" placeholder="Issue Number" data-enter-tab="periodicals_enumb_prep">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-fw fa-calculator"></i>
+                                                <i class="fas fa-fw fa-volume-up"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Weinberg Barcode 4">
+                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Volume Number" data-enter-target="periodicals_callnum_search">
                                     </div>
                                     <div class="btn-group w-100">
                                         <button id="periodicals_callnum_prefix" class="btn w-100 btn-outline-light">Check Prefix</button>
@@ -275,10 +275,10 @@
                                 <div class="col">
                                     <div class="row mb-2 text-center">
                                         <div class="col">
-                                            Bibliographic MMS ID
+                                            <h6>Bibliographic MMS ID</h6>
                                         </div>
                                         <div class="col">
-                                            Holding MMS ID
+                                            <h6>Holding MMS ID</h6>
                                         </div>
                                     </div>
                                     <div class="row mb-2 text-center">
@@ -297,7 +297,7 @@
                                                 <i class="fas fa-fw fa-barcode"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_barcode" class="form-control" placeholder="Barcode">
+                                        <input id="periodicals_barcode" class="form-control" placeholder="Physical Barcode">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -305,7 +305,7 @@
                                                 <i class="far fa-fw fa-calendar-alt"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_chroni" class="form-control" placeholder="Chron i">
+                                        <input id="periodicals_chroni" class="form-control" placeholder="Year">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -313,8 +313,8 @@
                                                 <i class="fas fa-fw fa-calculator"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enuma" class="form-control" placeholder="Enum a">
-                                        <input id="periodicals_enumb" class="form-control" placeholder="Enum b">
+                                        <input id="periodicals_enuma" class="form-control" placeholder="Issue Number">
+                                        <input id="periodicals_enumb" class="form-control" placeholder="Volume Number">
                                     </div>
                                     <h6 class="mb-1">Description Preview (Edit as necessary)</h6>
                                     <div class="input-group mb-2">
@@ -325,6 +325,7 @@
                                         </div>
                                         <input id="periodicals_desc" class="form-control" placeholder="Description Preview">
                                     </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col text-center m-auto">
                                             <button id="periodicals_go" class="btn w-50 btn-outline-light">Create</button>

@@ -415,13 +415,13 @@ $(function() {
             "callnum": document.getElementById("periodicals_callnum").value,
         }, function(response) {
             console.log(response);
+            document.getElementById("periodicals_chroni").value = document.getElementById("periodicals_chroni_prep").value;
+            document.getElementById("periodicals_enuma").value = document.getElementById("periodicals_enuma_prep").value;
+            document.getElementById("periodicals_enumb").value = document.getElementById("periodicals_enumb_prep").value;
+            document.getElementById("periodicals_desc").value = construct_periodicals_description();
             api_bib_go("periodicals", response.mms_id);
         });
-        // document.getElementById("periodicals_bib").focus();
     });
-    // document.getElementById("periodicals_bib_go").addEventListener("click", function() {
-    //     api_bib_go("periodicals");
-    // });
     document.getElementById("periodicals_go").addEventListener("click", function() {
         periodicals_record();
     });
@@ -643,7 +643,7 @@ function api_bib_go(prefix, mms_id) {
                                     "prefix": prefix,
                                     "bib": mms_id,
                                     "holding": this.querySelector("small").innerText,
-                                    "location": this.querySelector("location").innerText,
+                                    "location": this.querySelector(".location").innerText,
                                     "enc": prefix == "api_stats" ? enc : null,
                                 };
                                 holdings_prep(details);
