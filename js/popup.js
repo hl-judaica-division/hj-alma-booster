@@ -392,9 +392,16 @@ $(function() {
         radioObserver.observe(stats_radios[i], radio_config);
     }
 
+    document.getElementById("periodicals_callnum_prefix").addEventListener("click", function() {
+        document.getElementById("periodicals_callnum").value = add_periodicals_prefix(document.getElementById("periodicals_callnum").value);
+    });
+
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
         console.log("running");
         console.log(document.getElementById("periodicals_callnum").value);
+        if (document.getElementById("periodicals_callnum").value.match(/^[0-9]+$/) == null) {
+            document.getElementById("periodicals_callnum_prefix").click();
+        }
         send_active_message({
             "greeting": "periodicals_set_mmsid",
             "callnum": document.getElementById("periodicals_callnum").value,
@@ -700,10 +707,9 @@ function api_stats_go() {
     // now get this specific holding record content (so that we can insert the 920 field)
     const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "?apikey=" + key;
     $.get(url, function(holding, status) {
-
-        let filename = 'Alma_backup_statistics_' + bib_id + '_' + holding_id + '.xml';
-        let downloader = document.createElement('a');
-        let bb = new Blob([new XMLSerializer().serializeToString(holding.documentElement)], {type: 'text/xml'});
+        const filename = 'Alma_backup_statistics_' + bib_id + '_' + holding_id + '.xml';
+        const downloader = document.createElement('a');
+        const bb = new Blob([new XMLSerializer().serializeToString(holding.documentElement)], {type: 'text/xml'});
 
         downloader.setAttribute('href', window.URL.createObjectURL(bb));
         downloader.setAttribute('download', filename);
@@ -769,12 +775,11 @@ function periodicals_record() {
     // retrieve the current item list to get a default Item object
     const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "/items?apikey=" + key;
     $.get(url, function(items, status) {
-
         // make a copy of the old item
         const old_item = items.querySelector("item");
         const new_item = old_item.cloneNode(true);
 
-        let item_data = new_item.querySelector("item_data");
+        const item_data = new_item.querySelector("item_data");
         for (let i = 0; i < item_data.childNodes.length; i++) {
             if (item_data.getAttribute("desc") != null) {
                 item_data.childNodes[i].nodeValue = "";
@@ -789,7 +794,7 @@ function periodicals_record() {
         // item_data.removeChild(item_data.querySelector("arrival_date"));
         // item_data.removeChild(item_data.querySelector("creation_date"));
         // item_data.removeChild(item_data.querySelector("modification_date"));
-        
+
         const dobj = new Date();
         const d = dobj.getDate();
         const m = dobj.getMonth() + 1;
@@ -806,10 +811,10 @@ function periodicals_record() {
         // default value always the same
         const pmt = item_data.querySelector("physical_material_type");
         pmt.innerHTML = "ISSBD";
-        pmt.setAttribute("desc", "Bound Issue")
+        pmt.setAttribute("desc", "Bound Issue");
 
         // change policy based location
-        const policy = item_data.querySelector("policy")
+        const policy = item_data.querySelector("policy");
         const loc = document.getElementById("periodicals_location").innerText;
         if (loc.includes("HDJUD")) {
             policy.innerHTML = 91;
@@ -912,4 +917,24 @@ function stats_prep(get_cat) {
             document.getElementById("api_stats_bib_go").click();
         }
     });
+}
+
+/**
+ *
+ */
+function add_periodicals_prefix(callnum) {
+    const base_number = parseInt(callnum.split(".")[0]);
+    let prefix = "";
+    if (base_number <= 500) {
+        prefix = "PHeb ";
+    } else if (800 < base_number && base_number <= 999) {
+        prefix = "AsiaDoc";
+    } else if (1000 < base_number && base_number <= 1999) {
+        prefix = "PJud";
+    } else if (2000 < base_number && base_number <= 5000) {
+        prefix = "YP";
+    } else {
+        prefix = "Invalid Base Number";
+    }
+    return prefix + callnum;
 }
