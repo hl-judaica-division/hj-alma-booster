@@ -747,8 +747,8 @@ function alma_simple_search(type, subtype, text) {
     // Get all of the options for type and click the right one
     const options = document.getElementById("simpleSearchObjectType").children;
     for (let i = 0; i < options.length; i++) {
-        if (options[i].getAttribute("data-search-label") === type) {
-            options[i].children[0].click();
+        if (options[i].getAttribute("data-search-label").trim() === type) {
+            options[i].querySelector("a").click();
             break;
         }
     }
@@ -756,7 +756,7 @@ function alma_simple_search(type, subtype, text) {
     // Get all the new suboptions and click the correct one
     const suboptions = document.getElementById("simpleSearchIndexes_hiddenSelect").options;
     for (let i = 0; i < suboptions.length; i++) {
-        if (suboptions[i].innerText === subtype) {
+        if (suboptions[i].innerText.trim() === subtype) {
             document.getElementById("simpleSearchIndexes_hiddenSelect").selectedIndex = i;
             break;
         }
@@ -775,7 +775,7 @@ function alma_simple_search(type, subtype, text) {
  * @param {[object]} reply chrome message reply
  */
 function periodicals_set_mmsid(request, reply) {
-    alma_simple_search("Physical Titles", "Permanent Call Number", request.callnum);
+    alma_simple_search("Physical titles", "Permanent call number", request.callnum);
     wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(el) {
         reply({"mms_id": el.title});
         return;
