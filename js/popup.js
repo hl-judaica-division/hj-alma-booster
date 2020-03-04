@@ -410,6 +410,7 @@ $(function() {
         if (document.getElementById("periodicals_callnum").value.match(/^[0-9]+$/) == null) {
             document.getElementById("periodicals_callnum_prefix").click();
         }
+        console.log(document.getElementById("periodicals_callnum").value);
         send_active_message({
             "greeting": "periodicals_set_mmsid",
             "callnum": document.getElementById("periodicals_callnum").value,
@@ -419,7 +420,9 @@ $(function() {
             document.getElementById("periodicals_enuma").value = document.getElementById("periodicals_enuma_prep").value;
             document.getElementById("periodicals_enumb").value = document.getElementById("periodicals_enumb_prep").value;
             document.getElementById("periodicals_desc").value = construct_periodicals_description();
-            api_bib_go("periodicals", response.mms_id);
+            setTimeout(function() {
+                api_bib_go("periodicals", response.mms_id);
+            }, 2000);
         });
     });
     document.getElementById("periodicals_go").addEventListener("click", function() {
@@ -626,7 +629,7 @@ function api_bib_go(prefix, mms_id) {
                             cont.className = "d-flex w-100 justify-content-between";
 
                             const title = document.createElement("h6");
-                            title.innerHTML = holdings[i].querySelector("library").getAttribute("desc") + " - <span class='location'>" + holdings[i].querySelector("location").getAttribute("desc") + '</span>';
+                            title.innerHTML = holdings[i].querySelector("library").getAttribute("desc") + " - <span class='location'>" + holdings[i].querySelector("location").textContent + '</span>';
 
                             const id = document.createElement("small");
                             id.innerText = holdings[i].querySelector("holding_id").textContent;
@@ -672,11 +675,14 @@ function holdings_prep(details) {
         document.getElementById(details.prefix + "_enc").value = details.enc;
     }
     if (details.location) {
+        console.log(details.location);
         document.getElementById(details.prefix + "_location").innerText = details.location;
     }
     $("#" + details.prefix + "_holdings").fadeOut(function() {
         // present the next input screen (statistics concludes with api_stats_go function)
-        $("#" + details.prefix + "_input").fadeIn();
+        $("#" + details.prefix + "_input").fadeIn(function() {
+            document.getElementById("periodicals_barcode").focus();
+        });
     });
 }
 
@@ -804,10 +810,6 @@ function periodicals_record() {
         item_data.querySelector("barcode").innerHTML = document.getElementById("periodicals_barcode").value;
 
         // write date in correct format
-        // item_data.removeChild(item_data.querySelector("arrival_date"));
-        // item_data.removeChild(item_data.querySelector("creation_date"));
-        // item_data.removeChild(item_data.querySelector("modification_date"));
-
         const dobj = new Date();
         const d = dobj.getDate();
         const m = dobj.getMonth() + 1;
@@ -817,9 +819,15 @@ function periodicals_record() {
 
         const date_string = yyyy + "-" + mm + "-" + dd + "Z";
         console.log(date_string);
-        item_data.querySelector("arrival_date").innerHTML = date_string;
-        item_data.querySelector("creation_date").innerHTML = date_string;
-        item_data.querySelector("modification_date").innerHTML = date_string;
+        if (item_data.querySelector("arrival_date")) {
+            item_data.querySelector("arrival_date").innerHTML = date_string;
+        }
+        if (item_data.querySelector("creation_date")) {
+            item_data.querySelector("creation_date").innerHTML = date_string;
+        }
+        if (item_data.querySelector("modification_date")) {
+            item_data.querySelector("modification_date").innerHTML = date_string;
+        }
 
         // default value always the same
         const pmt = item_data.querySelector("physical_material_type");
@@ -838,8 +846,12 @@ function periodicals_record() {
         }
 
         // get enumerations and chronology from input
-        item_data.querySelector("enumeration_a").innerHTML = document.getElementById("periodicals_enuma").value;
-        item_data.querySelector("enumeration_b").innerHTML = document.getElementById("periodicals_enumb").value;
+        if (parseInt(document.getElementById("periodicals_enuma").value) !== 0) {
+            item_data.querySelector("enumeration_a").innerHTML = document.getElementById("periodicals_enuma").value;
+        }
+        if (parseInt(document.getElementById("periodicals_enumb").value) !== 0) {
+            item_data.querySelector("enumeration_b").innerHTML = document.getElementById("periodicals_enumb").value;
+        }
         item_data.querySelector("chronology_i").innerHTML = document.getElementById("periodicals_chroni").value;
         item_data.querySelector("description").innerHTML = document.getElementById("periodicals_desc").value;
 
@@ -875,13 +887,13 @@ function periodicals_record() {
  * Construct a description for periodicals based on enuma,b and chron
  */
 function construct_periodicals_description() {
-    const enuma = document.getElementById("periodicals_enuma").value;
-    const enumb = document.getElementById("periodicals_enumb").value;
-    const chroni = document.getElementById("periodicals_chroni").value;
+    const enuma = document.getElementById("periodicals_enuma").value.trim();
+    const enumb = document.getElementById("periodicals_enumb").value.trim();
+    const chroni = document.getElementById("periodicals_chroni").value.trim();
 
     let desc = "";
-    if (enuma != "") {
-        if (enumb == "") {
+    if (enuma != "" || parseInt(enuma) == 0) {
+        if (enumb == "" || parseInt(enumb) == 0) {
             desc = "pt." + enuma + " (" + chroni + ")";
         } else {
             desc = "v." + enumb + ":pt." + enuma + " (" + chroni + ")";
