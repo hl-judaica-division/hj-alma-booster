@@ -226,30 +226,42 @@
                             <hr />
                             <div id="periodicals_record_selection" class="row">
                                 <div class="col">
-                                    <p class="mb-1">MMS ID lookup with Call Number</p>
+                                    <p class="mb-1">Wand in barcodes from a Weinberg Periodical</p>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-sort-numeric-down"></i>
+                                                <i class="fas fa-fw fa-sort-numeric-down"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_callnum" class="form-control" placeholder="Call Number" data-enter-target="periodicals_callnum_search" />
-                                        <div class="input-group-append">
-                                            <button id="periodicals_callnum_prefix" class="btn btn-outline-light">Prefix</button>
-                                            <button id="periodicals_callnum_search" class="btn btn-outline-light">Search</button>
-                                        </div>
+                                        <input id="periodicals_callnum" class="form-control" placeholder="Weinberg Barcode 1" data-enter-tab="periodicals_chroni_prep">
                                     </div>
-                                    <hr>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-file-invoice"></i>
+                                                <i class="far fa-fw fa-calendar-alt"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_bib" class="form-control" placeholder="Bibliographic MMS ID" data-enter-target="periodicals_bib_go" />
-                                        <div class="input-group-append">
-                                            <button id="periodicals_bib_go" class="btn btn-outline-light">Go</button>
+                                        <input id="periodicals_chroni_prep" class="form-control" placeholder="Weinberg Barcode 2">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-calculator"></i>
+                                            </div>
                                         </div>
+                                        <input id="periodicals_enuma_prep" class="form-control" placeholder="Weinberg Barcode 3">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-calculator"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Weinberg Barcode 4">
+                                    </div>
+                                    <div class="btn-group w-100">
+                                        <button id="periodicals_callnum_prefix" class="btn w-100 btn-outline-light">Check Prefix</button>
+                                        <button id="periodicals_callnum_search" class="btn w-100 btn-outline-light">Locate Holding</button>
                                     </div>
                                 </div>
                             </div>

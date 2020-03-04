@@ -143,6 +143,14 @@ $(function() {
             }
         });
     }
+    const enter_tabs = document.querySelectorAll("[data-enter-tab]");
+    for (let i = 0; i < enter_tabs.length; i++) {
+        enter_tabs[i].addEventListener("keydown", function(e) {
+            if (e.keyCode == 13) {
+                document.getElementById(this.getAttribute("data-enter-tab")).focus();
+            }
+        });
+    }
 
     // create links to tab switching
     const pane_links = document.getElementsByClassName("pane-link");
@@ -405,12 +413,15 @@ $(function() {
         send_active_message({
             "greeting": "periodicals_set_mmsid",
             "callnum": document.getElementById("periodicals_callnum").value,
+        }, function(response) {
+            console.log(response);
+            api_bib_go("periodicals", response.mms_id);
         });
-        document.getElementById("periodicals_bib").focus();
+        // document.getElementById("periodicals_bib").focus();
     });
-    document.getElementById("periodicals_bib_go").addEventListener("click", function() {
-        api_bib_go("periodicals");
-    });
+    // document.getElementById("periodicals_bib_go").addEventListener("click", function() {
+    //     api_bib_go("periodicals");
+    // });
     document.getElementById("periodicals_go").addEventListener("click", function() {
         periodicals_record();
     });
@@ -552,7 +563,7 @@ function check_stats_input(input_id, output_id, subfield) {
  * Initialise the Statistics utility using APIs
  * @param {[string]} prefix prefix for element names
  */
-function api_bib_go(prefix) {
+function api_bib_go(prefix, mms_id) {
     // stop if the user hasn't entered an API key
     if (!key) {
         console.log("no key");
@@ -565,7 +576,9 @@ function api_bib_go(prefix) {
         $("#" + prefix + "_holding_selection").fadeIn();
 
         // request the bib record from the Alma
-        const mms_id = document.getElementById(prefix + "_bib").value;
+        if (!mms_id) {
+            mms_id = document.getElementById(prefix + "_bib").value;
+        }
         $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "?apikey=" + key, function(bib, status) {
             if (status != "success") {
                 console.log("API error", data, status);
@@ -901,20 +914,22 @@ function stats_prep(get_cat) {
     send_active_message({
         "greeting": "record_information",
     }, function(response) {
-        console.log(response.encoding);
-        if (response.encoding) {
-            document.getElementById("stats_enc").value = response.encoding;
-            check_stats_input("stats_enc", "stats_string_enc", "g");
-        } else {
-            create_alert_in_element(document.getElementById("stats_error"), "Couldn't find encoding level from Alma. Is Alma open?");
-        }
-        if (response.mms_id) {
-            if (response.mms_id.substr(0, 2) !== "99") {
-                create_alert_in_element(document.getElementById("api_stats_error"), "Holding Record present on screen, please close before continuing");
-                return;
+        console.log(response);
+        if (response) {
+            if (response.encoding) {
+                document.getElementById("stats_enc").value = response.encoding;
+                check_stats_input("stats_enc", "stats_string_enc", "g");
+            } else {
+                create_alert_in_element(document.getElementById("stats_error"), "Couldn't find encoding level from Alma. Is Alma open?");
             }
-            document.getElementById("api_stats_bib").value = response.mms_id;
-            document.getElementById("api_stats_bib_go").click();
+            if (response.mms_id) {
+                if (response.mms_id.substr(0, 2) !== "99") {
+                    create_alert_in_element(document.getElementById("api_stats_error"), "Holding Record present on screen, please close before continuing");
+                    return;
+                }
+                document.getElementById("api_stats_bib").value = response.mms_id;
+                document.getElementById("api_stats_bib_go").click();
+            }
         }
     });
 }
@@ -924,6 +939,7 @@ function stats_prep(get_cat) {
  */
 function add_periodicals_prefix(callnum) {
     const base_number = parseInt(callnum.split(".")[0]);
+    console.log(base_number, callnum)
     let prefix = "";
     if (base_number <= 500) {
         prefix = "PHeb ";

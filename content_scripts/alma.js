@@ -30,7 +30,6 @@ $(function() {
 /* ----------------------- Messages ------------------------ */
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        // Print button
         if (request.greeting === "add_buttons") {
             add_buttons();
         } else if (request.greeting === "invoice_check" || request.greeting === "invoice_review") {
@@ -52,8 +51,9 @@ chrome.runtime.onMessage.addListener(
         } else if (request.greeting === "record_information") {
             md_record_information(sendResponse);
         } else if (request.greeting === "periodicals_set_mmsid") {
-            periodicals_set_mmsid(request);
+            periodicals_set_mmsid(request, sendResponse);
         }
+        return true;
     }
 );
 
@@ -772,20 +772,13 @@ function alma_simple_search(type, subtype, text) {
 /**
  * Find MMS ID from Call number
  * @param {[object]} request chrome message request
+ * @param {[object]} reply chrome message reply
  */
-function periodicals_set_mmsid(request) {
-    console.log("hello there");
+function periodicals_set_mmsid(request, reply) {
     alma_simple_search("Physical Titles", "Permanent Call Number", request.callnum);
     wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(el) {
-        const copy_el = document.createElement("input");
-        copy_el.value = el.title;
-        copy_el.id = "judaica_copying";
-        document.body.appendChild(copy_el);
-        copy_el.select();
-        document.execCommand("copy");
-        copy_el.blur();
-        copy_el.parentElement.removeChild(copy_el);
-        window.location.reload();
+        reply({"mms_id": el.title});
+        return;
     });
 }
 
@@ -1001,18 +994,28 @@ function intro(reply) {
  * @param  {[type]} reply reply function
  */
 function md_record_information(reply) {
-    const LDR = document.querySelector("iframe").contentDocument.getElementById("MarcEditorPresenter.textArea.LDR");
-    const mms = document.querySelector("iframe").contentDocument.getElementById("MarcEditorPresenter.textArea.001");
+    const iframe = document.querySelector("iframe");
+    if (!iframe) {
+        console.log("Judaica Error: Unable to find MDEditor");
+        reply({"encoding": null, "mms_id": null});
+        return;
+    }
+    const LDR = iframe.contentDocument.getElementById("MarcEditorPresenter.textArea.LDR");
+    const mms = iframe.contentDocument.getElementById("MarcEditorPresenter.textArea.001");
     if (!LDR) {
         console.log("Judaica Error: Unable to find LDR in MDEditor");
+        reply({"encoding": null, "mms_id": null});
         return;
     }
     if (!mms) {
         console.log("Judaica Error: Unable to find mms in MDEditor");
+        reply({"encoding": null, "mms_id": null});
+        return;
     }
     const encoding_level = LDR.querySelector("textarea").value.substring(17, 18);
     console.log(encoding_level);
     const mms_id = mms.querySelector("textarea").value;
-    console.log(mms_id);
+    console.log("about to send this", {"encoding": encoding_level, "mms_id": mms_id});
     reply({"encoding": encoding_level, "mms_id": mms_id});
+    return;
 }
