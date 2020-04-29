@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "HJ Alma Booster",
-    "version": "4.0.4",
+    "version": "4.0.5",
     "description": "Alma Productivity tool originally developed for the Judaica Division of Widener Library by Tom Wagg",
     "icons": {
         "128": "images/book.png"
@@ -17,7 +17,7 @@
         {
             "run_at": "document_end",
             "matches": [
-                "<all_urls>"
+                "https://*.alma.exlibrisgroup.com/*"
             ],
             "js": ["js/jquery-3.2.1.min.js", "content_scripts/global.js"]
         },
@@ -31,7 +31,7 @@
         {
             "run_at": "document_end",
             "matches": [
-                "https://*.alma.exlibrisgroup.com/mng/action/home.do*"
+                "https://*.alma.exlibrisgroup.com/*"
             ],
             "js": ["content_scripts/alma.js"]
         }
@@ -57,12 +57,7 @@
     "permissions": [
 		"storage",
 		"tabs",
-        "bookmarks",
-        "http://*/",
-        "https://*/",
-        "downloads",
-        "clipboardRead",
-        "clipboardWrite"
+        "https://api-eu.hosted.exlibrisgroup.com/*/"
 	],
 
     "web_accessible_resources": [

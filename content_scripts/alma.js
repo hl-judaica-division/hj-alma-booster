@@ -52,6 +52,12 @@ chrome.runtime.onMessage.addListener(
             md_record_information(sendResponse);
         } else if (request.greeting === "periodicals_set_mmsid") {
             periodicals_set_mmsid(request, sendResponse);
+        } else if (request.greeting === "edit_record") {
+            edit_record(request);
+        } else if (request.greeting === "edit_holding_record") {
+            edit_holding_record(request);
+        } else if (request.greeting === "show_holding_window") {
+            create_holding_window(request.desc);
         }
         return true;
     }
@@ -261,7 +267,7 @@ function print_api_records(xml, multi = false, callback = null) {
 
     const barcode_label = document.createElement("h5");
     barcode_label.className = "m-0";
-    barcode_label.innerText = "MMS ID: 99-" + MMSID.substr(2, 11) + "-3941";
+    barcode_label.innerHTML = "MMS ID: 99<b>" + MMSID.substr(2, 11) + "</b>3941";
 
     barcode_col.appendChild(barcode_box);
     barcode_col.appendChild(barcode_label);
@@ -742,8 +748,9 @@ function expand_fund_code(code) {
  * @param  {[string]} type    the main type of search
  * @param  {[string]} subtype subtype of the search
  * @param  {[string]} text    the search field text
+ * @param  {[function]} callback callback function
  */
-function alma_simple_search(type, subtype, text) {
+function alma_simple_search(type, subtype, text, callback) {
     // Get all of the options for type and click the right one
     const options = document.getElementById("simpleSearchObjectType").children;
     for (let i = 0; i < options.length; i++) {
@@ -767,6 +774,10 @@ function alma_simple_search(type, subtype, text) {
 
     // Submit the search
     document.getElementById("simpleSearchBtn").click();
+
+    if (callback) {
+        callback();
+    }
 }
 
 /**
@@ -778,6 +789,7 @@ function periodicals_set_mmsid(request, reply) {
     alma_simple_search("Physical titles", "Permanent call number", request.callnum);
     wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(el) {
         reply({"mms_id": el.title});
+        window.location.reload();
         return;
     });
 }
@@ -1018,4 +1030,80 @@ function md_record_information(reply) {
     console.log("about to send this", {"encoding": encoding_level, "mms_id": mms_id});
     reply({"encoding": encoding_level, "mms_id": mms_id});
     return;
+}
+
+function edit_record(request) {
+    alma_simple_search("Physical Titles", "MMS ID", request.mms, function() {
+        wait_for_el("#INITIAL_SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_title > a", 10000, function(el) {
+            el.click();
+            wait_for_el("#PAGE_BUTTONS_cbuttonedit", 10000, function(butt) {
+                butt.click();
+            });
+        });
+    });
+}
+
+function edit_holding_record(request) {
+    alma_simple_search("Physical Titles", "MMS ID", request.mms, function() {
+        wait_for_el("#record_1_results > div > div.tabsContainer > div.tabsContainerNotExpanded > div:nth-child(1) > div > div > ul > li.tab.hasContentInd.hasContent.jsToolTip.closeOnClick.scrollInit > a", 10000, function(el) {
+            el.click();
+            wait_for_el("#ADD_HIDERADIO_results_0_inventoryLookAheadphysicalUiHoldingResults_csearchbib_resultsnav_pane_physical_upper_actions_holdings > div > a", 2000, function(holding_btn) {
+                holding_btn.click();
+                wait_for_el("#SELENIUM_ID_listWithFilters_ROW_0_COL_pid", 10000, function(col) {
+                    let i = 0;
+                    while (col && col.innerText != request.holding) {
+                        i += 1;
+                        col = document.querySelector("#SELENIUM_ID_listWithFilters_ROW_" + i.toString() + "_COL_pid");
+                    }
+                    if (col) {
+                        console.log("Found it in row", i);
+                        col.children[0].click();
+                        wait_for_el("#PAGE_BUTTONS_cbuttonedit", 10000, function(edit) {
+                            edit.click();
+                        });
+                    } else {
+                        alert("Could not find matching holding record");
+                    }
+                });
+            });
+        });
+    });
+}
+
+function create_holding_window(description) {
+    let win = window.open('', '_blank', 'width=300,height=120,toolbar=0,location=0,menubar=0');
+    win.document.write(`
+    <!DOCTYPE html>
+    <html class="h-100">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <title>Periodicals Information</title>
+            <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        </head>    
+        <body class="h-100">
+            <div class='container-fluid h-100 py-2'>
+                <div class="row h-100">
+                    <div class="col h-100 text-center">
+                        <textarea id="box" class="w-100"></textarea>
+                        <div class="btn-group">
+                            <button id="copy" class="btn btn-danger">Copy</button>
+                            <button id="close_copy" class="btn btn-danger">Close and Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+            document.getElementById("box").value = "` + description + `";
+            document.getElementById("copy").addEventListener("click", function() {
+                console.log("yoohoo");
+                document.getElementById("box").select();
+                document.execCommand("copy");
+            });
+            document.getElementById("close_copy").addEventListener("click", function() {
+                document.getElementById("copy").click();
+                close();
+            });
+            </script>
+        </body>
+    </html>`);
 }

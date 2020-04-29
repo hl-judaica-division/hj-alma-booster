@@ -4,6 +4,8 @@ let key = null;
 
 // -----------------------------------------------------------------------------------------------
 $(function() {
+    // send_active_message({"greeting": "edit_holding_record", "mms": 1, 'holding': 2});
+
     // load in settings from chrome.storage
     chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key"], function(items) {
         // if they haven't used the extension before the immediately show lockscreen
@@ -400,17 +402,14 @@ $(function() {
         radioObserver.observe(stats_radios[i], radio_config);
     }
 
-    document.getElementById("periodicals_callnum_prefix").addEventListener("click", function() {
-        document.getElementById("periodicals_callnum").value = add_periodicals_prefix(document.getElementById("periodicals_callnum").value);
+    document.getElementById("periodicals_month").addEventListener("click", function() {
+        this.classList.toggle("active");
+        document.getElementById("periodicals_month_no").classList.toggle("hide");
+        document.getElementById("periodicals_month_yes").classList.toggle("hide");
     });
 
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
-        console.log("running");
-        console.log(document.getElementById("periodicals_callnum").value);
-        if (document.getElementById("periodicals_callnum").value.match(/^[0-9]+$/) == null) {
-            document.getElementById("periodicals_callnum_prefix").click();
-        }
-        console.log(document.getElementById("periodicals_callnum").value);
+        document.getElementById("periodicals_callnum").value = add_periodicals_prefix(document.getElementById("periodicals_callnum").value);
         send_active_message({
             "greeting": "periodicals_set_mmsid",
             "callnum": document.getElementById("periodicals_callnum").value,
@@ -419,7 +418,9 @@ $(function() {
             document.getElementById("periodicals_chroni").value = document.getElementById("periodicals_chroni_prep").value;
             document.getElementById("periodicals_enuma").value = document.getElementById("periodicals_enuma_prep").value;
             document.getElementById("periodicals_enumb").value = document.getElementById("periodicals_enumb_prep").value;
-            document.getElementById("periodicals_desc").value = construct_periodicals_description();
+            let descs = construct_periodicals_description()
+            document.getElementById("periodicals_subfield_desc").value = descs[0];
+            document.getElementById("periodicals_desc").value = descs[1];
             setTimeout(function() {
                 api_bib_go("periodicals", response.mms_id);
             }, 2000);
@@ -429,7 +430,9 @@ $(function() {
         periodicals_record();
     });
     $("#periodicals_enuma, #periodicals_enumb, #periodicals_chroni").on("keyup", function() {
-        document.getElementById("periodicals_desc").value = construct_periodicals_description();
+        let descs = construct_periodicals_description()
+            document.getElementById("periodicals_subfield_desc").value = descs[0];
+            document.getElementById("periodicals_desc").value = descs[1];
     });
 });
 
@@ -870,6 +873,10 @@ function periodicals_record() {
                 console.log(data, status);
                 $("#periodicals_feedback_loading").fadeOut(function() {
                     $("#periodicals_feedback_success").fadeIn();
+                    setTimeout(function() {
+                        send_active_message({"greeting": "edit_holding_record", "mms": bib_id, 'holding': holding_id});
+                        send_active_message({"greeting": "show_holding_window", "desc": document.getElementById("periodicals_subfield_desc").value});
+                    }, 3000);
                 });
             },
             failure: function(data, status) {
@@ -887,20 +894,56 @@ function periodicals_record() {
  * Construct a description for periodicals based on enuma,b and chron
  */
 function construct_periodicals_description() {
-    const enuma = document.getElementById("periodicals_enuma").value.trim();
+    let enuma = document.getElementById("periodicals_enuma").value.trim();
     const enumb = document.getElementById("periodicals_enumb").value.trim();
     const chroni = document.getElementById("periodicals_chroni").value.trim();
 
     let desc = "";
-    if (enuma != "" || parseInt(enuma) == 0) {
-        if (enumb == "" || parseInt(enumb) == 0) {
-            desc = "pt." + enuma + " (" + chroni + ")";
+    let subfield_desc = ""
+    if (document.getElementById("periodicals_month").classList.contains("active")) {
+        enuma = issues_to_months(enuma);
+        desc = chroni + ":" + enuma;
+        subfield_desc = chroni + " $$b " + enuma;
+    } else {
+        if (enuma != "" || parseInt(enuma) == 0) {
+            if (enumb == "" || parseInt(enumb) == 0) {
+                desc = "pt." + enuma + " (" + chroni + ")";
+                subfield_desc = enuma + " $$i " + chroni;
+            } else {
+                desc = "v." + enumb + ":pt." + enuma + " (" + chroni + ")";
+                subfield_desc = enumb + " $$b " + enuma + " $$i " + chroni;
+            }
         } else {
-            desc = "v." + enumb + ":pt." + enuma + " (" + chroni + ")";
+            if (chroni != "") {
+                desc = chroni;
+                subfield_desc = chroni;
+            }
         }
     }
 
-    return desc;
+    return [subfield_desc, desc];
+}
+
+function issues_to_months(list) {
+    const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+    // split up list in ranges
+    let ranges = list.split(",");
+    for (let i = 0; i < ranges.length; i++) {
+
+        // split up each range into months
+        months = ranges[i].split("-");
+        for (let i = 0; i < months.length; i++) {
+            // convert months to text
+            months[i] = monthNames[parseInt(months[i]) - 1];
+        }
+        // rejoin months
+        ranges[i] = months.join("-");
+    }
+    // rejoin ranges
+    list = ranges.join(",");
+
+    return list;
 }
 
 /**
@@ -950,6 +993,10 @@ function stats_prep(get_cat) {
  *
  */
 function add_periodicals_prefix(callnum) {
+    if (callnum.match(/^[0-9]+$/) != null) {
+        return callnum;
+    }
+
     const base_number = parseInt(callnum.split(".")[0]);
     console.log(base_number, callnum)
     let prefix = "";
