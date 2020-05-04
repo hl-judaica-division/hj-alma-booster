@@ -57,7 +57,7 @@
     "permissions": [
 		"storage",
 		"tabs",
-        "https://api-eu.hosted.exlibrisgroup.com/*/"
+        "https://api-na.hosted.exlibrisgroup.com/*/"
 	],
 
     "web_accessible_resources": [
