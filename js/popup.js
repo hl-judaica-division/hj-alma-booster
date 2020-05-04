@@ -585,7 +585,7 @@ function api_bib_go(prefix, mms_id) {
         if (!mms_id) {
             mms_id = document.getElementById(prefix + "_bib").value;
         }
-        $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "?apikey=" + key, function(bib, status) {
+        $.get(construct_api_url("retrieve_bib", mms_id), function(bib, status) {
             if (status != "success") {
                 console.log("API error", data, status);
                 return;
@@ -599,8 +599,7 @@ function api_bib_go(prefix, mms_id) {
             }
 
             // request the list of holding records associated with this bib record
-            console.log("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "/holdings?apikey=" + key);
-            $.get("https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + mms_id + "/holdings?apikey=" + key, function(data, status) {
+            $.get(construct_api_url("retrieve_holding_list", mms_id), function(data, status) {
                 if (status != "success") {
                     console.log("API error", data, status);
                     return;
@@ -677,8 +676,7 @@ function holdings_prep(details) {
     if (details.enc) {
         document.getElementById(details.prefix + "_enc").value = details.enc;
     }
-    if (details.location) {
-        console.log(details.location);
+    if (details.location && document.getElementById(details.prefix + "_location")) {
         document.getElementById(details.prefix + "_location").innerText = details.location;
     }
     $("#" + details.prefix + "_holdings").fadeOut(function() {
@@ -727,7 +725,7 @@ function api_stats_go() {
     }
 
     // now get this specific holding record content (so that we can insert the 920 field)
-    const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "?apikey=" + key;
+    const url = construct_api_url("retrieve_holding", bib_id, holding_id);
     $.get(url, function(holding, status) {
         const filename = 'Alma_backup_statistics_' + bib_id + '_' + holding_id + '.xml';
         const downloader = document.createElement('a');
@@ -795,7 +793,7 @@ function periodicals_record() {
     const holding_id = document.getElementById("periodicals_holding_id").innerText;
 
     // retrieve the current item list to get a default Item object
-    const url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs/" + bib_id + "/holdings/" + holding_id + "/items?apikey=" + key;
+    const url = construct_api_url("retrieve_item_list", bib_id, holding_id);
     $.get(url, function(items, status) {
         // make a copy of the old item
         const old_item = items.querySelector("item");
@@ -1012,4 +1010,21 @@ function add_periodicals_prefix(callnum) {
         prefix = "Invalid Base Number";
     }
     return prefix + callnum;
+}
+
+function construct_api_url(api_call, bib_mms, holding_mms) {
+    url = "https://api-na.hosted.exlibrisgroup.com/almaws/v1/"
+    if (api_call === "retrieve_bib") {
+        url += "bibs/" + bib_mms
+    } else if (api_call === "retrieve_holding_list") {
+        url += "bibs/" + bib_mms + "/holdings"
+    } else if (api_call === "retrieve_holding") {
+        url += "bibs/" + bib_mms + "/holdings/" + holding_mms
+    } else if (api_call === "retrieve_item_list") {
+        url += "bibs/" + bib_mms + "/holdings/" + holding_mms + "/items"
+    } else {
+        return "Error: API call not found."
+    }
+    url += "?apikey=" + key;
+    return url;
 }

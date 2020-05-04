@@ -34,7 +34,7 @@
             <div class="col-4">
                 <ul class="nav">
                     <li class="nav-item w-100">
-                        <a class="nav-link pane-link pane-link-action pane-1 active" href="#" tabindex="-1" data-focus-box="#stats_note">Statistics</a>
+                        <a class="nav-link pane-link pane-link-action pane-1 active" href="#" tabindex="-1" data-focus-box="#api_stats_bib">Statistics</a>
                     </li>
                     <li class="nav-item w-100">
                         <a class="nav-link pane-link pane-link-action pane-1" href="#" tabindex="-1" data-focus-box="#invoice_number">Invoice Processing</a>
@@ -46,7 +46,7 @@
                         <a class="nav-link pane-link pane-link-action pane-1" href="#" tabindex="-1" data-focus-box="#periodicals_callnum">Periodicals</a>
                     </li>
                     <li class="nav-item w-100">
-                        <a class="nav-link pane-link pane-link-action pane-1" style="display:inline" href="#" tabindex="-1" data-focus-box="">API Statistics</a><span class="badge badge-warning" style="display: inline">BETA</span>
+                        <a class="nav-link pane-link pane-link-action pane-1" style="display:inline" href="#" tabindex="-1" data-focus-box="#stats_note">Statistics</a><span class="badge badge-warning" style="display: inline">LEGACY</span>
                     </li>
                     <!-- <li class="nav-item w-100">
                         <a class="nav-link pane-link" href="#" tabindex="-1">6. Extract Tag</a>
@@ -56,76 +56,151 @@
             <div class="col-8 p-3">
                 <div id="pane_carousel" class="carousel vertical slide" data-interval="false">
                     <div class="carousel-inner">
-                        <div id="stats_error" class="carousel-item pane active">
+                        <div id="api_stats_error" class="carousel-item pane active">
                             <div class="row mb-2">
                                 <div class="col">
-                                    <h4 class="text-center">Statistics</h4>
+                                    <h4 class="text-center">Statistics (API)</h4>
                                 </div>
                             </div>
                             <hr />
-                            <div class="row mb-2">
+                            <div id="api_stats_record_selection" class="row">
                                 <div class="col">
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-university"></i>
+                                                <i class="fas fa-file-invoice"></i>
                                             </div>
                                         </div>
-                                        <select id="stats_unit" class="form-control"></select>
-                                    </div>
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                        </div>
-                                        <input id="stats_cataloguer" class="form-control" placeholder="Cataloguer" />
-                                    </div>
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-sticky-note"></i>
-                                            </div>
-                                        </div>
-                                        <input id="stats_note" class="form-control" placeholder="Note" />
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-list-ol"></i>
-                                            </div>
-                                        </div>
-                                        <input id="stats_enc" class="form-control" placeholder="Encoding Level" disabled/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div id="stats_type" class="btn-group btn-group-wide btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-light btn-stats">
-                                            <input type="radio" autocomplete="off" value="c"> Copy
-                                        </label>
-                                        <label class="btn btn-light btn-stats">
-                                            <input type="radio" autocomplete="off" value="m"> Modified
-                                        </label>
-                                        <label class="btn btn-light btn-stats">
-                                            <input type="radio" autocomplete="off" value="o"> Original
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col text-center m-auto">
-                                    <div class="input-group">
-                                        <span id="stats_string" class="form-control">
-                                            92011<span id="stats_string_type"></span>$$d<span id="stats_string_date" class="today"></span><span id="stats_string_unit"></span><span id="stats_string_cataloguer"></span><span id="stats_string_enc"></span><span
-                                                id="stats_string_note"></span>
-                                        </span>
+                                        <input id="api_stats_bib" class="form-control" placeholder="Bibliographic MMS ID" data-enter-target="api_stats_bib_go" />
                                         <div class="input-group-append">
-                                            <button id="stats_macro_copy" class="btn btn-outline-light btn-copy">Macro Copy</button>
+                                            <button id="api_stats_bib_go" class="btn btn-outline-light">Go</button>
                                         </div>
                                     </div>
+                                    <!-- <div class="mb-2 text-center">OR</div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-database"></i>
+                                            </div>
+                                        </div>
+                                        <input id="api_stats_holding" class="form-control" placeholder="Holdings MMS ID" />
+                                        <div class="input-group-append">
+                                            <button id="api_stats_holding_go" class="btn btn-outline-light">Go</button>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div id="api_stats_holding_selection" class="row hide">
+                                <div class="col">
+                                    <h5 id="api_stats_holdings_loading" class="text-center">Locating holding records <i class="fa fa-spin fa-circle-notch"></i></h5>
+                                    <div id="api_stats_holdings" class="list-group swing"></div>
+                                </div>
+                            </div>
+                            <div id="api_stats_input" class="row hide">
+                                <div class="col">
+                                    <div class="row mb-2 text-center">
+                                        <div class="col">
+                                            Bib: <span id="api_stats_bib_id"></span>
+                                        </div>
+                                        <div class="col">
+                                            Holding: <span id="api_stats_holding_id"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <i class="fas fa-university"></i>
+                                                    </div>
+                                                </div>
+                                                <select id="api_stats_unit" class="form-control"></select>
+                                            </div>
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                </div>
+                                                <input id="api_stats_cataloguer" class="form-control" placeholder="Cataloguer" />
+                                            </div>
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <i class="fas fa-sticky-note"></i>
+                                                    </div>
+                                                </div>
+                                                <input id="api_stats_note" class="form-control" placeholder="Note" />
+                                            </div>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <i class="fas fa-list-ol"></i>
+                                                    </div>
+                                                </div>
+                                                <input id="api_stats_enc" class="form-control" placeholder="Encoding Level" disabled/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div id="api_stats_type" class="btn-group btn-group-wide btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-light btn-stats">
+                                                    <input type="radio" autocomplete="off" value="c"> Copy
+                                                </label>
+                                                <label class="btn btn-light btn-stats">
+                                                    <input type="radio" autocomplete="off" value="m"> Modified
+                                                </label>
+                                                <label class="btn btn-light btn-stats">
+                                                    <input type="radio" autocomplete="off" value="o"> Original
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col text-center m-auto">
+                                            <div class="input-group">
+                                                <span id="api_stats_string" class="form-control">
+                                                    92011<span id="api_stats_string_type"></span>$$d<span id="api_stats_string_date" class="today"></span><span id="api_stats_string_unit"></span><span id="api_stats_string_cataloguer"></span><span id="api_stats_string_enc"></span><span
+                                                        id="api_stats_string_note"></span>
+                                                </span>
+                                                <div class="input-group-append">
+                                                    <button id="api_stats_go" class="btn btn-outline-light">Record</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="api_stats_feedback" class="row hide">
+                                <div class="col">
+                                    <h5 id="api_stats_feedback_loading" class="text-center">Recording Statistic <i class="fa fa-spin fa-circle-notch"></i></h5>
+                                    <h5 id="api_stats_feedback_success" class="text-center hide">Statistic Recorded <i class="fa fa-check"></i></h5>
+                                    <h5 id="api_stats_feedback_failure" class="text-center hide">Error: <span id="api_stats_failure_reason"></span> <i class="fa fa-exclamation-circle"></i></h5>
+                                    <hr>
+                                    <table id="api_stats_old_stat" class="table hide">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Unit</th>
+                                                <th scope="col">Cataloguer</th>
+                                                <th scope="col">Encoding</th>
+                                                <th scope="col">Note</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="a"></td>
+                                                <td class="d"></td>
+                                                <td class="e"></td>
+                                                <td class="f"></td>
+                                                <td class="g"></td>
+                                                <td class="x"></td>
+                                            </tr>
+                                        </tbody>
+                                      </table>
                                 </div>
                             </div>
                         </div>
@@ -371,151 +446,76 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="api_stats_error" class="carousel-item pane">
+                        <div id="stats_error" class="carousel-item pane">
                             <div class="row mb-2">
                                 <div class="col">
-                                    <h4 class="text-center">Statistics (API)</h4>
+                                    <h4 class="text-center">Statistics</h4>
                                 </div>
                             </div>
                             <hr />
-                            <div id="api_stats_record_selection" class="row">
+                            <div class="row mb-2">
                                 <div class="col">
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-file-invoice"></i>
+                                                <i class="fas fa-university"></i>
                                             </div>
                                         </div>
-                                        <input id="api_stats_bib" class="form-control" placeholder="Bibliographic MMS ID" data-enter-target="api_stats_bib_go" />
-                                        <div class="input-group-append">
-                                            <button id="api_stats_bib_go" class="btn btn-outline-light">Go</button>
-                                        </div>
+                                        <select id="stats_unit" class="form-control"></select>
                                     </div>
-                                    <!-- <div class="mb-2 text-center">OR</div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-database"></i>
+                                                <i class="fas fa-user"></i>
                                             </div>
                                         </div>
-                                        <input id="api_stats_holding" class="form-control" placeholder="Holdings MMS ID" />
+                                        <input id="stats_cataloguer" class="form-control" placeholder="Cataloguer" />
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-sticky-note"></i>
+                                            </div>
+                                        </div>
+                                        <input id="stats_note" class="form-control" placeholder="Note" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-list-ol"></i>
+                                            </div>
+                                        </div>
+                                        <input id="stats_enc" class="form-control" placeholder="Encoding Level" disabled/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div id="stats_type" class="btn-group btn-group-wide btn-group-toggle" data-toggle="buttons">
+                                        <label class="btn btn-light btn-stats">
+                                            <input type="radio" autocomplete="off" value="c"> Copy
+                                        </label>
+                                        <label class="btn btn-light btn-stats">
+                                            <input type="radio" autocomplete="off" value="m"> Modified
+                                        </label>
+                                        <label class="btn btn-light btn-stats">
+                                            <input type="radio" autocomplete="off" value="o"> Original
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col text-center m-auto">
+                                    <div class="input-group">
+                                        <span id="stats_string" class="form-control">
+                                            92011<span id="stats_string_type"></span>$$d<span id="stats_string_date" class="today"></span><span id="stats_string_unit"></span><span id="stats_string_cataloguer"></span><span id="stats_string_enc"></span><span
+                                                id="stats_string_note"></span>
+                                        </span>
                                         <div class="input-group-append">
-                                            <button id="api_stats_holding_go" class="btn btn-outline-light">Go</button>
-                                        </div>
-                                    </div> -->
-                                </div>
-                            </div>
-                            <div id="api_stats_holding_selection" class="row hide">
-                                <div class="col">
-                                    <h5 id="api_stats_holdings_loading" class="text-center">Locating holding records <i class="fa fa-spin fa-circle-notch"></i></h5>
-                                    <div id="api_stats_holdings" class="list-group swing"></div>
-                                </div>
-                            </div>
-                            <div id="api_stats_input" class="row hide">
-                                <div class="col">
-                                    <div class="row mb-2 text-center">
-                                        <div class="col">
-                                            Bib: <span id="api_stats_bib_id"></span>
-                                        </div>
-                                        <div class="col">
-                                            Holding: <span id="api_stats_holding_id"></span>
+                                            <button id="stats_macro_copy" class="btn btn-outline-light btn-copy">Macro Copy</button>
                                         </div>
                                     </div>
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-university"></i>
-                                                    </div>
-                                                </div>
-                                                <select id="api_stats_unit" class="form-control"></select>
-                                            </div>
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-user"></i>
-                                                    </div>
-                                                </div>
-                                                <input id="api_stats_cataloguer" class="form-control" placeholder="Cataloguer" />
-                                            </div>
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-sticky-note"></i>
-                                                    </div>
-                                                </div>
-                                                <input id="api_stats_note" class="form-control" placeholder="Note" />
-                                            </div>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-list-ol"></i>
-                                                    </div>
-                                                </div>
-                                                <input id="api_stats_enc" class="form-control" placeholder="Encoding Level" disabled/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            <div id="api_stats_type" class="btn-group btn-group-wide btn-group-toggle" data-toggle="buttons">
-                                                <label class="btn btn-light btn-stats">
-                                                    <input type="radio" autocomplete="off" value="c"> Copy
-                                                </label>
-                                                <label class="btn btn-light btn-stats">
-                                                    <input type="radio" autocomplete="off" value="m"> Modified
-                                                </label>
-                                                <label class="btn btn-light btn-stats">
-                                                    <input type="radio" autocomplete="off" value="o"> Original
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div class="row">
-                                        <div class="col text-center m-auto">
-                                            <div class="input-group">
-                                                <span id="api_stats_string" class="form-control">
-                                                    92011<span id="api_stats_string_type"></span>$$d<span id="api_stats_string_date" class="today"></span><span id="api_stats_string_unit"></span><span id="api_stats_string_cataloguer"></span><span id="api_stats_string_enc"></span><span
-                                                        id="api_stats_string_note"></span>
-                                                </span>
-                                                <div class="input-group-append">
-                                                    <button id="api_stats_go" class="btn btn-outline-light">Record</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="api_stats_feedback" class="row hide">
-                                <div class="col">
-                                    <h5 id="api_stats_feedback_loading" class="text-center">Recording Statistic <i class="fa fa-spin fa-circle-notch"></i></h5>
-                                    <h5 id="api_stats_feedback_success" class="text-center hide">Statistic Recorded <i class="fa fa-check"></i></h5>
-                                    <h5 id="api_stats_feedback_failure" class="text-center hide">Error: <span id="api_stats_failure_reason"></span> <i class="fa fa-exclamation-circle"></i></h5>
-                                    <hr>
-                                    <table id="api_stats_old_stat" class="table hide">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Type</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Unit</th>
-                                                <th scope="col">Cataloguer</th>
-                                                <th scope="col">Encoding</th>
-                                                <th scope="col">Note</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="a"></td>
-                                                <td class="d"></td>
-                                                <td class="e"></td>
-                                                <td class="f"></td>
-                                                <td class="g"></td>
-                                                <td class="x"></td>
-                                            </tr>
-                                        </tbody>
-                                      </table>
                                 </div>
                             </div>
                         </div>

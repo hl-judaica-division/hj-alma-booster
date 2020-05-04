@@ -1,9 +1,9 @@
 /* ----------------------- Globals ------------------------ */
 let key = null;
 const api_bases = {
-    "get_record": "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/bibs",
-    "get_invoice_lines": "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/acq/invoices/",
-    "get_po_line": "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/acq/po-lines/",
+    "get_record": "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs",
+    "get_invoice_lines": "https://api-na.hosted.exlibrisgroup.com/almaws/v1/acq/invoices/",
+    "get_po_line": "https://api-na.hosted.exlibrisgroup.com/almaws/v1/acq/po-lines/",
 };
 const print_html_shell = `
     <html>
