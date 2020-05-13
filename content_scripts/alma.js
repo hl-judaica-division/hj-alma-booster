@@ -1044,27 +1044,38 @@ function edit_record(request) {
 }
 
 function edit_holding_record(request) {
+    multiple_holdings = true;
     alma_simple_search("Physical Titles", "MMS ID", request.mms, function() {
         wait_for_el("#record_1_results > div > div.tabsContainer > div.tabsContainerNotExpanded > div:nth-child(1) > div > div > ul > li.tab.hasContentInd.hasContent.jsToolTip.closeOnClick.scrollInit > a", 10000, function(el) {
             el.click();
+            console.log(parseInt(el.innerText.trim().split("(")[1].split(")")[0]))
+            if (parseInt(el.innerText.trim().split("(")[1].split(")")[0]) == 1) {
+                multiple_holdings = false;
+            }
             wait_for_el("#ADD_HIDERADIO_results_0_inventoryLookAheadphysicalUiHoldingResults_csearchbib_resultsnav_pane_physical_upper_actions_holdings > div > a", 2000, function(holding_btn) {
                 holding_btn.click();
-                wait_for_el("#SELENIUM_ID_listWithFilters_ROW_0_COL_pid", 10000, function(col) {
-                    let i = 0;
-                    while (col && col.innerText != request.holding) {
-                        i += 1;
-                        col = document.querySelector("#SELENIUM_ID_listWithFilters_ROW_" + i.toString() + "_COL_pid");
-                    }
-                    if (col) {
-                        console.log("Found it in row", i);
-                        col.children[0].click();
-                        wait_for_el("#PAGE_BUTTONS_cbuttonedit", 10000, function(edit) {
-                            edit.click();
-                        });
-                    } else {
-                        alert("Could not find matching holding record");
-                    }
-                });
+                if (multiple_holdings) {
+                    wait_for_el("#SELENIUM_ID_listWithFilters_ROW_0_COL_pid", 10000, function(col) {
+                        let i = 0;
+                        while (col && col.innerText != request.holding) {
+                            i += 1;
+                            col = document.querySelector("#SELENIUM_ID_listWithFilters_ROW_" + i.toString() + "_COL_pid");
+                        }
+                        if (col) {
+                            console.log("Found it in row", i);
+                            col.children[0].click();
+                            wait_for_el("#PAGE_BUTTONS_cbuttonedit", 10000, function(edit) {
+                                edit.click();
+                            });
+                        } else {
+                            alert("Could not find matching holding record");
+                        }
+                    });
+                } else {
+                    wait_for_el("#PAGE_BUTTONS_cbuttonedit", 10000, function(edit) {
+                        edit.click();
+                    });
+                }
             });
         });
     });

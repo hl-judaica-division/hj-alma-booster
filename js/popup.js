@@ -4,7 +4,11 @@ let key = null;
 
 // -----------------------------------------------------------------------------------------------
 $(function() {
-    // send_active_message({"greeting": "edit_holding_record", "mms": 1, 'holding': 2});
+    // many holdings
+    // send_active_message({"greeting": "edit_holding_record", "mms": '990075360980203941', 'holding': '222013462800003941'});
+
+    // one holdings
+    // send_active_message({"greeting": "edit_holding_record", "mms": '99153750688503941', 'holding': '222291116100003941'});
 
     // load in settings from chrome.storage
     chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key"], function(items) {
