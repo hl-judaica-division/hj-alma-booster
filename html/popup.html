@@ -232,62 +232,101 @@
                         <div class="carousel-item pane">
                             <div class="row mb-2">
                                 <div class="col">
-                                    <h4 class="text-center">Linking</h4>
+                                    <h4 class="text-center">Linking 990133438410203941</h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col" id="linking_defaults_error">
-                                    <input id="linking_defaults_barcode" class="form-control mb-1 linking-default" placeholder="Box Barcode">
-                                    <input id="linking_defaults_MMSID" class="form-control mb-1 linking-default" placeholder="Box MMS ID">
-                                    <select id="linking_defaults_type" class="form-control mb-1 linking-default">
-                                        <option value="pamphlets : Hebrew" data-call-num-prefix="Heb 4">pamphlets : Hebrew</option>
-                                        <option value="pamphlets : Slavic" data-call-num-prefix="Jud 9000.">pamphlets : Slavic</option>
-                                        <option value="pamphlets : Western" data-call-num-prefix="Jud 9000.">pamphlets : Western</option>
-                                        <option value="pamphlets : Yiddish" data-call-num-prefix="Y 1">pamphlets : Yiddish</option>
-                                        <option value="CDROMs" data-call-num-prefix="JCDROM ">CDROMs</option>
-                                        <option value="periodicals : Hebrew" data-call-num-prefix="PHeb ">periodicals : Hebrew</option>
-                                        <option value="periodicals : Slavic" data-call-num-prefix="PJud ">periodicals : Slavic</option>
-                                        <option value="periodicals : Western" data-call-num-prefix="PJud ">periodicals : Western</option>
-                                        <option value="periodicals : Yiddish" data-call-num-prefix="YP  ">periodicals : Yiddish</option>
-                                        <option value="recordings" data-call-num-prefix="JCD ">recordings</option>
-                                        <option value="scores" data-call-num-prefix="JSCO ">scores</option>
-                                        <option value="slides" data-call-num-prefix="JSL ">slides</option>
-                                        <option value="software" data-call-num-prefix="JSW ">software</option>
-                                        <option value="videorecordings" data-call-num-prefix="JDVD ">videorecordings</option>
-                                        <option value="filmstrips" data-call-num-prefix="JFS ">filmstrips</option>
-                                    </select>
-                                    <textarea id="linking_defaults_title" class="form-control mb-1 linking-default" placeholder="Box Title" rows=1 data-enter-target="linking_set_defaults" disabled></textarea>
+                            <div id="linking_input">
+                                <div class="row">
+                                    <div class="col" id="linking_defaults_error">
+                                        <input id="linking_defaults_barcode" class="form-control mb-1 linking-default" placeholder="Box Barcode">
+                                        <input id="linking_defaults_MMSID" class="form-control mb-1 linking-default" placeholder="Box MMS ID">
+                                        <select id="linking_defaults_type" class="form-control mb-1 linking-default">
+                                            <option value="pamphlets : Hebrew" data-call-num-prefix="Heb 4">pamphlets : Hebrew</option>
+                                            <option value="pamphlets : Slavic" data-call-num-prefix="Jud 9000.">pamphlets : Slavic</option>
+                                            <option value="pamphlets : Western" data-call-num-prefix="Jud 9000.">pamphlets : Western</option>
+                                            <option value="pamphlets : Yiddish" data-call-num-prefix="Y 1">pamphlets : Yiddish</option>
+                                            <option value="CDROMs" data-call-num-prefix="JCDROM ">CDROMs</option>
+                                            <option value="periodicals : Hebrew" data-call-num-prefix="PHeb ">periodicals : Hebrew</option>
+                                            <option value="periodicals : Slavic" data-call-num-prefix="PJud ">periodicals : Slavic</option>
+                                            <option value="periodicals : Western" data-call-num-prefix="PJud ">periodicals : Western</option>
+                                            <option value="periodicals : Yiddish" data-call-num-prefix="YP  ">periodicals : Yiddish</option>
+                                            <option value="recordings" data-call-num-prefix="JCD ">recordings</option>
+                                            <option value="scores" data-call-num-prefix="JSCO ">scores</option>
+                                            <option value="slides" data-call-num-prefix="JSL ">slides</option>
+                                            <option value="software" data-call-num-prefix="JSW ">software</option>
+                                            <option value="videorecordings" data-call-num-prefix="JDVD ">videorecordings</option>
+                                            <option value="filmstrips" data-call-num-prefix="JFS ">filmstrips</option>
+                                        </select>
+                                        <textarea id="linking_defaults_title" class="form-control mb-1 linking-default" placeholder="Box Title" rows=1 data-enter-target="linking_set_defaults" disabled></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-block btn-outline-light" id="linking_clear_defaults">Clear Defaults</button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-block btn-outline-light" id="linking_set_defaults">Set Defaults</button>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col" id="linking_item_error">
+                                        <input id="linking_item_callnum" class="form-control mb-1" placeholder="Item Call Number" data-enter-target="linking_link_item">
+                                        <input id="linking_item_MMSID" class="form-control mb-1" placeholder="Item MMS ID" data-enter-target="linking_link_item">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-block btn-outline-light" id="linking_link_item_callnum">Link with Call Number</button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-block btn-outline-light" id="linking_link_item">Link with MMS ID</button>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input id="linking_check_barcode" class="form-control" placeholder="Box Barcode" data-enter-target="linking_check">
+                                            <button type="button" class="btn btn-outline-light" id="linking_check">Check Linking</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mb-2">
+                            <div id="linking_holdinglist" class="hide">
                                 <div class="col">
-                                    <button type="button" class="btn btn-block btn-outline-light" id="linking_clear_defaults">Clear Defaults</button>
-                                </div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-block btn-outline-light" id="linking_set_defaults">Set Defaults</button>
+                                    <h5 id="linking_holdings_loading" class="text-center">Checking for multiple holding records <i class="fa fa-spin fa-circle-notch"></i></h5>
+                                    <div id="linking_holdings" class="list-group swing"></div>
                                 </div>
                             </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col" id="linking_item_error">
-                                    <input id="linking_item_callnum" class="form-control mb-1" placeholder="Item Call Number" data-enter-target="linking_link_item">
-                                    <input id="linking_item_MMSID" class="form-control mb-1" placeholder="Item MMS ID" data-enter-target="linking_link_item">
+                            <div id="linking_statuspage" class="hide">
+                                <hr>
+                                <div class="font-weight-bold">
+                                    <span id="linking_progress_text">Retrieving bibliographic record</span> <i id="linking_ptext_loading" class="fas fa-circle-notch fa-spin"></i>
                                 </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <button type="button" class="btn btn-block btn-outline-light" id="linking_link_item">Link Item with Lookup</button>
+                                <div class="progress mb-4" style="height: 30px;">
+                                    <div id="linking_pbar" class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-block btn-outline-light" id="linking_link_item_onscreen">Link Item on Screen</button>
+                                <div id="linking_getbib" class="status-message mb-2 ml-4">
+                                    <span class="text-danger bg-light rounded p-1 hide"><i class="fa fa-fw fa-times"></i> Failed to retrieve bibliographic record</span>
+                                    <span class="text-worked p-1 hide"><i class="fa fa-fw fa-check"></i> Bibliographic record retrieved</span>
                                 </div>
-                            </div>
-                            <hr />
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="input-group">
-                                        <input id="linking_check_barcode" class="form-control" placeholder="Box Barcode" data-enter-target="linking_check">
-                                        <button type="button" class="btn btn-outline-light" id="linking_check">Check Linking</button>
+                                <div id="linking_setbib" class="status-message mb-2 ml-4">
+                                    <span class="text-danger bg-light rounded p-1 hide"><i class="fa fa-fw fa-times"></i> Failed to update bibliographic record</span>
+                                    <span class="text-worked p-1 hide"><i class="fa fa-fw fa-check"></i> Bibliographic record Updated</span>
+                                </div>
+                                <div id="linking_getholding" class="status-message mb-2 ml-4">
+                                    <span class="text-danger bg-light rounded p-1 hide"><i class="fa fa-fw fa-times"></i> Failed to retrieve holding record</span>
+                                    <span class="text-worked p-1 hide"><i class="fa fa-fw fa-check"></i> Holding record retrieved</span>
+                                </div>
+                                <div id="linking_setholding" class="status-message mb-2 ml-4">
+                                    <span class="text-danger bg-light rounded p-1 hide"><i class="fa fa-fw fa-times"></i> Failed to updated holding record</span>
+                                    <span class="text-worked p-1 hide"><i class="fa fa-fw fa-check"></i> Holding record updated</span>
+                                </div>
+                                <div id="linking_next" class="hide">
+                                    <hr>
+                                    <div class="text-center mt-4">
+                                        <button id="linking_another" class="btn btn-outline-light btn-lg" style="text-align: center;">Link another</button>
                                     </div>
                                 </div>
                             </div>
@@ -340,6 +379,23 @@
                                             </div>
                                         </div>
                                         <input id="periodicals_enumb_prep" class="form-control" placeholder="Volume Number" data-enter-target="periodicals_callnum_search">
+                                    </div>
+                                    <hr>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-volume-up"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Box Number" data-enter-target="periodicals_callnum_search">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-volume-up"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Judaica Number" data-enter-target="periodicals_callnum_search">
                                     </div>
                                     <div class="btn-group w-100">
                                         <button id="periodicals_callnum_search" class="btn w-100 btn-outline-light">Search Call Number</button>

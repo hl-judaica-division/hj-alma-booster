@@ -40,8 +40,8 @@ chrome.runtime.onMessage.addListener(
             add_fund(request);
         } else if (request.greeting === "linking_set_defaults") {
             linking_set_defaults(request);
-        } else if (request.greeting === "linking_link_item") {
-            linking_link_item(request);
+        } else if (request.greeting === "linking_get_mms") {
+            linking_get_mms(request, sendResponse);
         } else if (request.greeting === "linking_check") {
             linking_check(request);
         } else if (request.greeting === "statistics") {
@@ -814,77 +814,18 @@ function linking_set_defaults(request) {
 /**
  * Link an item to a box
  * @param  {[object]} request chrome messaging request
+ * @param  {[object]} sendResponse use for sending response
  */
-function linking_link_item(request) {
-    // copy the given things
-    const copy_el = document.createElement("input");
-    copy_el.value = "ALMA-LINKING-ITEM" + request.defaults.MMSID + "|" + request.defaults.title + "|" + request.defaults.barcode + "|" + request.defaults.type;
-    copy_el.id = "judaica_copying";
-    document.body.appendChild(copy_el);
-    copy_el.select();
-    document.execCommand("copy");
-    copy_el.blur();
-    copy_el.parentElement.removeChild(copy_el);
-
-    // stop here if we don't want to lookup
-    if (!request.lookup) {
-        return;
-    }
-
-    // use MMD ID whenever you can
-    if (request.MMSID != "") {
-        alma_simple_search("Physical titles", "MMS ID", request.MMSID);
-    } else {
-        alma_simple_search("Physical titles", "Permanent call number", request.callnum);
-    }
+function linking_get_mms(request, sendResponse) {
+    // search using the given call number
+    alma_simple_search("Physical titles", "Permanent call number", request.callnum);
 
     // wait for the edit record button to appear
-    wait_for_el("#INPUT_ROW_ACTION_0_results_csearchbib_resultsedit_record", 10000, function(el) {
-        el.click();
-
-        // wait for the mdeditor to load
-        wait_for_el("iframe[title='MDEditor']", 10000, function(frame) {
-            // open the outer menu level
-            const outer_menu_loop = setInterval(function() {
-                const outer_menu = frame.contentDocument.getElementById("additionalSvcsMenuId");
-                if (outer_menu) {
-                    clearInterval(outer_menu_loop);
-                    outer_menu.click();
-
-                    // open the inner level menu once it appears
-                    const inner_menu_loop = setInterval(function() {
-                        const inner_menu = frame.contentDocument.getElementById("marcAdditionalServicesMenuId");
-                        if (inner_menu) {
-                            clearInterval(inner_menu_loop);
-                            inner_menu.click();
-
-                            // open the holding record screen
-                            const inventory_loop = setInterval(function() {
-                                const inventory = frame.contentDocument.getElementById("MenuToolBar.showNavigationMarc21BibMenuItem");
-                                if (inventory) {
-                                    clearInterval(inventory_loop);
-                                    inventory.click();
-
-                                    // wait for the holding record edit button to appear and click the first one
-                                    const edit_holding_loop = setInterval(function() {
-                                        console.log("awaiting edit");
-                                        const items = frame.contentDocument.getElementsByClassName("actionButtonStyle");
-                                        for (let i = 0; i < items.length; i++) {
-                                            if (items[i].innerText == "Edit") {
-                                                clearInterval(edit_holding_loop);
-                                                items[i].click();
-                                                break;
-                                            }
-                                        }
-                                    }, 100);
-                                }
-                            }, 100);
-                        }
-                    }, 100);
-                }
-            }, 100);
-        });
+    wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(mmsbox) {
+        // return the mms id
+        sendResponse({'mms': mmsbox.innerText});
     });
+    return true;
 }
 
 /**
