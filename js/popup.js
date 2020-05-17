@@ -610,6 +610,7 @@ function link_item(MMSID, holding_id, defaults) {
                             });
                         },
                         failure: function(data, status) {
+                            console.log("update holding failed", data);
                             document.querySelector("#linking_setholding .text-danger").classList.remove("hide");
                         }
                     });
