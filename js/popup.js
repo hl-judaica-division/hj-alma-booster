@@ -410,10 +410,22 @@ $(function() {
         radioObserver.observe(stats_radios[i], radio_config);
     }
 
-    document.getElementById("periodicals_month").addEventListener("click", function() {
-        this.classList.toggle("active");
-        document.getElementById("periodicals_month_no").classList.toggle("hide");
-        document.getElementById("periodicals_month_yes").classList.toggle("hide");
+    document.getElementById("periodicals_boxes_toggle").addEventListener("click", function() {
+        const change = !document.getElementById("periodicals_boxnum_prep").disabled;
+        document.getElementById("periodicals_boxnum_prep").disabled = change;
+        document.getElementById("periodicals_judnum_prep").disabled = change;
+        document.getElementById("periodicals_boxes_group").classList.toggle("hide");
+    });
+
+    // make every toggle button turn the style s
+    document.querySelectorAll(".btn-toggle").forEach(function(item, index) {
+        item.addEventListener("click", function() {
+            this.classList.toggle("active");
+            if (this.querySelector(".yes") && this.querySelector(".no")) {
+                this.querySelector(".yes").classList.toggle("hide");
+                this.querySelector(".no").classList.toggle("hide");
+            }
+        });
     });
 
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
@@ -426,6 +438,8 @@ $(function() {
             document.getElementById("periodicals_chroni").value = document.getElementById("periodicals_chroni_prep").value;
             document.getElementById("periodicals_enuma").value = document.getElementById("periodicals_enuma_prep").value;
             document.getElementById("periodicals_enumb").value = document.getElementById("periodicals_enumb_prep").value;
+            document.getElementById("periodicals_boxnum").value = document.getElementById("periodicals_boxnum_prep").value;
+            document.getElementById("periodicals_judnum").value = document.getElementById("periodicals_judnum_prep").value;
             let descs = construct_periodicals_description()
             document.getElementById("periodicals_subfield_desc").value = descs[0];
             document.getElementById("periodicals_desc").value = descs[1];
@@ -539,7 +553,7 @@ function link_item(MMSID, holding_id, defaults) {
 
         let barcodesub = document.createElement("subfield");
         barcodesub.setAttribute("code", "a");
-        barcodesub.innerText = "Linked Judaica Barcode : " + defaults.barcode;
+        barcodesub.innerText = "Linked Judaica barcode : " + defaults.barcode;
 
         barcode929.appendChild(barcodesub);
 
@@ -590,7 +604,7 @@ function link_item(MMSID, holding_id, defaults) {
 
                     let box977type = document.createElement("subfield");
                     box977type.setAttribute("code", "w");
-                    box977type.innerText = defaults.type;
+                    box977type.innerText = defaults.barcode;
                     box977.appendChild(box977type);
 
                     holding.querySelector("record").appendChild(box977);
@@ -1027,6 +1041,7 @@ function periodicals_record() {
                     setTimeout(function() {
                         send_active_message({"greeting": "edit_holding_record", "mms": bib_id, 'holding': holding_id});
                         send_active_message({"greeting": "show_holding_window", "desc": document.getElementById("periodicals_subfield_desc").value});
+                        window.close();
                     }, 3000);
                 });
             },
@@ -1049,6 +1064,9 @@ function construct_periodicals_description() {
     const enumb = document.getElementById("periodicals_enumb").value.trim();
     const chroni = document.getElementById("periodicals_chroni").value.trim();
 
+    const boxnum = document.getElementById("periodicals_boxnum").value.trim();
+    const judnum = document.getElementById("periodicals_judnum").value.trim();
+
     let desc = "";
     let subfield_desc = ""
     if (document.getElementById("periodicals_month").classList.contains("active")) {
@@ -1070,6 +1088,12 @@ function construct_periodicals_description() {
                 subfield_desc = chroni;
             }
         }
+    }
+
+    if (boxnum != "" && judnum != "") {
+        const boxstr = "Judaica Number " + judnum + " (Box " + boxnum + ") "
+        desc = boxstr + desc;
+        subfield_desc = boxstr + subfield_desc;
     }
 
     return [subfield_desc, desc];

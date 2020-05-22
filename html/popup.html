@@ -232,7 +232,7 @@
                         <div class="carousel-item pane">
                             <div class="row mb-2">
                                 <div class="col">
-                                    <h4 class="text-center">Linking 990133438410203941</h4>
+                                    <h4 class="text-center">Linking</h4>
                                 </div>
                             </div>
                             <div id="linking_input">
@@ -333,14 +333,21 @@
                             </div>
                         </div>
                         <div id="periodicals_error" class="carousel-item pane">
-                            <div class="row mb-2">
+                            <div class="row mb-2 text-center justify-content-center">
                                 <div class="col">
-                                    <h4 class="text-center">Periodicals</h4>
+                                    <h4 class="text-center mb-1">Periodicals</h4>
                                 </div>
                             </div>
                             <hr />
                             <div id="periodicals_record_selection" class="row">
                                 <div class="col">
+                                    <div class='text-center mb-1'>
+                                        <button id="periodicals_boxes_toggle" class="btn btn-toggle btn-outline-light btn-sm">
+                                            <span>Boxes? </span>
+                                            <i class="fa fa-fw fa-times no"></i>
+                                            <i class="hide fa fa-fw fa-check yes"></i>
+                                        </button>
+                                    </div>
                                     <p class="mb-1">Wand in barcodes from a Weinberg Periodical</p>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -368,8 +375,8 @@
                                         <div class="input-group-append">
                                             <button id="periodicals_month" class="btn btn-outline-light btn-toggle" tabindex="-1">
                                                 <span>Months?</span>
-                                                <i id="periodicals_month_no" class="fa fa-fw fa-times"></i>
-                                                <i id="periodicals_month_yes" class="hide fa fa-fw fa-check"></i>
+                                                <i class="fa fa-fw fa-times no"></i>
+                                                <i class="hide fa fa-fw fa-check yes"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -385,18 +392,18 @@
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-fw fa-volume-up"></i>
+                                                <i class="fas fa-fw fa-box"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Box Number" data-enter-target="periodicals_callnum_search">
+                                        <input id="periodicals_boxnum_prep" class="form-control" placeholder="Box Number" data-enter-target="periodicals_callnum_search" disabled>
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-fw fa-volume-up"></i>
+                                                <i class="fas fa-fw fa-book"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Judaica Number" data-enter-target="periodicals_callnum_search">
+                                        <input id="periodicals_judnum_prep" class="form-control" placeholder="Judaica Number" data-enter-target="periodicals_callnum_search" disabled>
                                     </div>
                                     <div class="btn-group w-100">
                                         <button id="periodicals_callnum_search" class="btn w-100 btn-outline-light">Search Call Number</button>
@@ -453,6 +460,15 @@
                                         </div>
                                         <input id="periodicals_enuma" class="form-control" placeholder="Issue Number">
                                         <input id="periodicals_enumb" class="form-control" placeholder="Volume Number">
+                                    </div>
+                                    <div id="periodicals_boxes_group" class="input-group mb-2 hide">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-fw fa-box"></i>
+                                            </div>
+                                        </div>
+                                        <input id="periodicals_boxnum" class="form-control" placeholder="Box Number">
+                                        <input id="periodicals_judnum" class="form-control" placeholder="Judaica Number">
                                     </div>
                                     <h6 class="mb-1">Description Preview (Edit as necessary)</h6>
                                     <div class="input-group mb-2">

@@ -1055,6 +1055,7 @@ function create_holding_window(description) {
                 document.getElementById("copy").click();
                 close();
             });
+            document.getElementById("close_copy").focus();
             </script>
         </body>
     </html>`);
