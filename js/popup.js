@@ -299,6 +299,10 @@ $(function() {
         });
     });
     document.getElementById("linking_link_item").addEventListener("click", function() {
+        if (document.getElementById("linking_item_MMSID").value.trim() == "") {
+            alert("You've asked me to link with an an MMS ID. Have you considered that I made need an MMS ID in order to do that...?\n\nPlease provide an MMS ID");
+            return;
+        }
         linking_check_holdings(document.getElementById("linking_item_MMSID").value, {
             "MMSID": document.getElementById("linking_defaults_MMSID").value,
             "barcode": document.getElementById("linking_defaults_barcode").value,
@@ -307,10 +311,19 @@ $(function() {
         });
     });
     document.getElementById("linking_link_item_callnum").addEventListener("click", function() {
+        const prefixes = ["Heb 4", "Jud 9000.", "Jud 9000.", "Y 1", "JCDROM ", "PHeb ", "PJud ", "PJud ", "YP  ", "JCD ", "JSCO ", "JSL ", "JSW ", "JDVD ", "JFS "]
+        if (prefixes.indexOf(document.getElementById("linking_item_callnum").value) > -1) {
+            alert("You've asked me to link with a call number. Have you considered that I may need a call number in order to do this...?\n\nPlease provide a call number");
+            return;
+        }
         send_active_message({
             'greeting': 'linking_get_mms',
             'callnum': document.getElementById("linking_item_callnum").value
         }, function(response) {
+            if (response.mms == undefined) {
+                alert("This call number search results in more than one Bib record. Please search Alma and redo the linking using MMS ID of the specific item you wish to link.");
+                return;
+            } 
             document.getElementById("linking_item_MMSID").value = response.mms;
             document.getElementById("linking_link_item").click();
         });
@@ -501,20 +514,29 @@ function linking_check_holdings(MMSID, defaults) {
         $("#linking_holdinglist").fadeIn();
     });
 
-    let holdingurl = construct_api_url("retrieve_holding_list", MMSID);
-    $.get(holdingurl, function(holding_list, status) {
+    $.get(construct_api_url("retrieve_bib", MMSID), function(bibrec, status) {
         if (status != "success") {
             console.log("API error", holding_list);
             document.getElementById("linking_holdings_loading").innerHTML = "API Error - See Console";
             return;
         } else {
-            document.getElementById("linking_holdings_loading").classList.add("hide");
+            console.log(bibrec);
+            let holdingurl = construct_api_url("retrieve_holding_list", MMSID);
+            $.get(holdingurl, function(holding_list, status) {
+                if (status != "success") {
+                    console.log("API error", holding_list);
+                    document.getElementById("linking_holdings_loading").innerHTML = "API Error - See Console";
+                    return;
+                } else {
+                    document.getElementById("linking_holdings_loading").classList.add("hide");
+                }
+                let holdings = holding_list.querySelectorAll("holding");
+                display_holdings_list("linking_holdings", holdings, function() {
+                    link_item(MMSID, this.querySelector("small").innerText, defaults, bibrec);
+                }, bibrec, "linking_bib_title");
+            });
         }
-        let holdings = holding_list.querySelectorAll("holding");
-        display_holdings_list("linking_holdings", holdings, function() {
-            link_item(MMSID, this.querySelector("small").innerText, defaults);
-        });
-    });
+    })
 }
 
 /**
@@ -524,7 +546,7 @@ function linking_check_holdings(MMSID, defaults) {
  * @param  {[type]} defaults defaults (box details)
  * @param  {[type]} lookup   whether to look up the details
  */
-function link_item(MMSID, holding_id, defaults) {
+function link_item(MMSID, holding_id, defaults, bib) {
     // test case: 990133438410203941
     $("#linking_holdinglist").fadeOut(function() {
         $("#linking_statuspage").fadeIn();
@@ -532,127 +554,112 @@ function link_item(MMSID, holding_id, defaults) {
 
     // retrieve bibliographic record of item
     let biburl = construct_api_url("retrieve_bib", MMSID)
-    $.get(biburl, function(bib, status) {
-        if (status == "success") {
-            document.querySelector("#linking_getbib .text-worked").classList.remove("hide");
-            document.querySelector('#linking_pbar').style.width = "25%";
-            document.querySelector('#linking_progress_text').innerText = "Updating bibliographic record";
-        } else {
-            document.querySelector("#linking_getbib .text-danger").classList.remove("hide");
-        }
+    document.querySelector("#linking_getbib .text-worked").classList.remove("hide");
+    document.querySelector('#linking_pbar').style.width = "25%";
+    document.querySelector('#linking_progress_text').innerText = "Updating bibliographic record";
 
-        // create new 929 field with box mms
-        let boxMMS929 = document.createElement("datafield");
-        boxMMS929.setAttribute("ind1", " ");
-        boxMMS929.setAttribute("ind2", "0");
-        boxMMS929.setAttribute("tag", "929");
+    // create new 929 field with box mms
+    let boxMMS929 = document.createElement("datafield");
+    boxMMS929.setAttribute("ind1", " ");
+    boxMMS929.setAttribute("ind2", "0");
+    boxMMS929.setAttribute("tag", "929");
 
-        let boxMMSsub = document.createElement("subfield");
-        boxMMSsub.setAttribute("code", "a");
-        boxMMSsub.innerText = "Linked Judaica : " + defaults.type + " : " + defaults.MMSID;
+    let boxMMSsub = document.createElement("subfield");
+    boxMMSsub.setAttribute("code", "a");
+    boxMMSsub.innerText = "Linked Judaica : " + defaults.type + " : " + defaults.MMSID;
 
-        boxMMS929.appendChild(boxMMSsub);
+    boxMMS929.appendChild(boxMMSsub);
 
-        // create another 929 field with box barcode
-        let barcode929 = document.createElement("datafield");
-        barcode929.setAttribute("ind1", " ");
-        barcode929.setAttribute("ind2", "0");
-        barcode929.setAttribute("tag", "929");
+    // create another 929 field with box barcode
+    let barcode929 = document.createElement("datafield");
+    barcode929.setAttribute("ind1", " ");
+    barcode929.setAttribute("ind2", "0");
+    barcode929.setAttribute("tag", "929");
 
-        let barcodesub = document.createElement("subfield");
-        barcodesub.setAttribute("code", "a");
-        barcodesub.innerText = "Linked Judaica barcode : " + defaults.barcode;
+    let barcodesub = document.createElement("subfield");
+    barcodesub.setAttribute("code", "a");
+    barcodesub.innerText = "Linked Judaica barcode : " + defaults.barcode;
 
-        barcode929.appendChild(barcodesub);
+    barcode929.appendChild(barcodesub);
 
-        bib.querySelector("record").appendChild(boxMMS929);
-        bib.querySelector("record").appendChild(barcode929);
-        console.log("New", bib);
+    bib.querySelector("record").appendChild(boxMMS929);
+    bib.querySelector("record").appendChild(barcode929);
+    console.log("New", bib);
 
-        // format the new bib for an http request and update it using the api
-        const new_bib_string = new XMLSerializer().serializeToString(bib.documentElement);
-        $.ajax({
-            url: biburl,
-            method: "PUT",
-            contentType: "application/xml",
-            data: new_bib_string,
-            success: function(data, status) {
-                console.log(data, status);
-                document.querySelector("#linking_setbib .text-worked").classList.remove("hide");
-                document.querySelector('#linking_pbar').style.width = "50%";
-                document.querySelector('#linking_progress_text').innerText = "Retrieving holding record";
+    // format the new bib for an http request and update it using the api
+    const new_bib_string = new XMLSerializer().serializeToString(bib.documentElement);
+    $.ajax({
+        url: biburl,
+        method: "PUT",
+        contentType: "application/xml",
+        data: new_bib_string,
+        success: function(data, status) {
+            console.log(data, status);
+            document.querySelector("#linking_setbib .text-worked").classList.remove("hide");
+            document.querySelector('#linking_pbar').style.width = "50%";
+            document.querySelector('#linking_progress_text').innerText = "Retrieving holding record";
 
-                // now retreive the holding record associated with bib (should be just one)
-                let holdingurl = construct_api_url("retrieve_holding", MMSID, holding_id);
-                $.get(holdingurl, function(holding, status) {
-                    if (status == "success") {
-                        document.querySelector("#linking_getholding .text-worked").classList.remove("hide");
-                        document.querySelector('#linking_pbar').style.width = "75%";
-                        document.querySelector('#linking_progress_text').innerText = "Updating holding record";
-                    } else {
-                        document.querySelector("#linking_getholding .text-danger").classList.remove("hide");
+            // now retreive the holding record associated with bib (should be just one)
+            let holdingurl = construct_api_url("retrieve_holding", MMSID, holding_id);
+            $.get(holdingurl, function(holding, status) {
+                if (status == "success") {
+                    document.querySelector("#linking_getholding .text-worked").classList.remove("hide");
+                    document.querySelector('#linking_pbar').style.width = "75%";
+                    document.querySelector('#linking_progress_text').innerText = "Updating holding record";
+                } else {
+                    document.querySelector("#linking_getholding .text-danger").classList.remove("hide");
+                }
+                console.log("Holding record", holding);
+
+                // create a new 977 field with box info
+                let box977 = document.createElement("datafield");
+                box977.setAttribute("ind1", "9");
+                box977.setAttribute("ind2", " ");
+                box977.setAttribute("tag", "977");
+
+                let box977title = document.createElement("subfield");
+                box977title.setAttribute("code", "t");
+                box977title.innerText = defaults.title;
+                box977.appendChild(box977title);
+
+                let box977id = document.createElement("subfield");
+                box977id.setAttribute("code", "f");
+                box977id.innerText = defaults.MMSID;
+                box977.appendChild(box977id);
+
+                let box977type = document.createElement("subfield");
+                box977type.setAttribute("code", "w");
+                box977type.innerText = defaults.barcode;
+                box977.appendChild(box977type);
+
+                holding.querySelector("record").appendChild(box977);
+                const new_holding_string = new XMLSerializer().serializeToString(holding.documentElement);
+                $.ajax({
+                    url: holdingurl,
+                    method: "PUT",
+                    contentType: "application/xml",
+                    data: new_holding_string,
+                    success: function(data, status) {
+                        document.querySelector("#linking_setholding .text-worked").classList.remove("hide");
+                        document.querySelector('#linking_pbar').style.width = "100%";
+                        document.querySelector('#linking_progress_text').innerText = "Linking complete!";
+                        document.querySelector('#linking_ptext_loading').classList.add('hide');
+                        $("#linking_next").fadeIn(function() {
+                            $("#linking_another").focus();
+                        });
+                    },
+                    failure: function(data, status) {
+                        console.log("update holding failed", data);
+                        document.querySelector("#linking_setholding .text-danger").classList.remove("hide");
                     }
-                    console.log("Holding record", holding);
-
-                    // create a new 977 field with box info
-                    let box977 = document.createElement("datafield");
-                    box977.setAttribute("ind1", "9");
-                    box977.setAttribute("ind2", " ");
-                    box977.setAttribute("tag", "977");
-
-                    let box977title = document.createElement("subfield");
-                    box977title.setAttribute("code", "t");
-                    box977title.innerText = defaults.title;
-                    box977.appendChild(box977title);
-
-                    let box977id = document.createElement("subfield");
-                    box977id.setAttribute("code", "f");
-                    box977id.innerText = defaults.MMSID;
-                    box977.appendChild(box977id);
-
-                    let box977type = document.createElement("subfield");
-                    box977type.setAttribute("code", "w");
-                    box977type.innerText = defaults.barcode;
-                    box977.appendChild(box977type);
-
-                    holding.querySelector("record").appendChild(box977);
-                    const new_holding_string = new XMLSerializer().serializeToString(holding.documentElement);
-                    $.ajax({
-                        url: holdingurl,
-                        method: "PUT",
-                        contentType: "application/xml",
-                        data: new_holding_string,
-                        success: function(data, status) {
-                            document.querySelector("#linking_setholding .text-worked").classList.remove("hide");
-                            document.querySelector('#linking_pbar').style.width = "100%";
-                            document.querySelector('#linking_progress_text').innerText = "Linking complete!";
-                            document.querySelector('#linking_ptext_loading').classList.add('hide');
-                            $("#linking_next").fadeIn(function() {
-                                $("#linking_another").focus();
-                            });
-                        },
-                        failure: function(data, status) {
-                            console.log("update holding failed", data);
-                            document.querySelector("#linking_setholding .text-danger").classList.remove("hide");
-                        }
-                    });
                 });
-            },
-            failure: function(data, status) {
-                document.querySelector("#linking_setbib .text-danger").classList.remove("hide");
-                console.log("FAIL", data, status);
-            },
-        });
+            });
+        },
+        failure: function(data, status) {
+            document.querySelector("#linking_setbib .text-danger").classList.remove("hide");
+            console.log("FAIL", data, status);
+        },
     });
-    // send_active_message({
-    //     "greeting": "linking_link_item",
-    //     "MMSID": MMSID,
-    //     "callnum": callnum,
-    //     "defaults": defaults,
-    //     "lookup": lookup,
-    // }, function(response) {
-    //     window.close();
-    // });
 }
 
 /**
@@ -814,7 +821,10 @@ function api_bib_go(prefix, mms_id) {
 }
 
 
-function display_holdings_list(listid, holdings, eachonclick) {
+function display_holdings_list(listid, holdings, eachonclick, bibrec, titleid) {
+    if (bibrec) {
+        document.getElementById(titleid).innerText = bibrec.querySelector("record datafield[tag='245'] subfield[code='a']").textContent;
+    }
     for (let i = 0; i < holdings.length; i++) {
         const list = document.getElementById(listid);
         const new_item = document.createElement("a");

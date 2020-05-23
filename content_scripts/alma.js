@@ -822,8 +822,15 @@ function linking_get_mms(request, sendResponse) {
 
     // wait for the edit record button to appear
     wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(mmsbox) {
-        // return the mms id
-        sendResponse({'mms': mmsbox.innerText});
+        setTimeout(function() {
+            // check that there isn't more than one record
+            if (document.getElementById("SPAN_RECORD_VIEW_results_ROW_ID_1_LABEL_mmsIdmmsId")) {
+                sendResponse({'mms': undefined});
+            } else {
+                // return the mms id
+                sendResponse({'mms': mmsbox.innerText});
+            }
+        }, 500);
     });
     return true;
 }
