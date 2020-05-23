@@ -162,3 +162,7 @@ h6 {
   .status-message {
       font-size: large;
   }
+
+  .form-control:disabled {
+      background-color: #cfcfcf;
+  }

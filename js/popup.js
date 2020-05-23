@@ -11,7 +11,7 @@ $(function() {
     // send_active_message({"greeting": "edit_holding_record", "mms": '99153750688503941', 'holding': '222291116100003941'});
 
     // load in settings from chrome.storage
-    chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key"], function(items) {
+    chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key", "periodicals_box"], function(items) {
         // if they haven't used the extension before the immediately show lockscreen
         if (items.user_type === undefined || items.user_type === 3) {
             window.location.href = "../html/lockscreen.html";
@@ -104,6 +104,10 @@ $(function() {
         // make key available globally
         if (items.api_key) {
             key = items.api_key;
+        }
+
+        if (items.periodicals_box && items.periodicals_box == true) {
+            document.getElementById("periodicals_boxes_toggle").click();
         }
     });
 
@@ -415,6 +419,10 @@ $(function() {
         document.getElementById("periodicals_boxnum_prep").disabled = change;
         document.getElementById("periodicals_judnum_prep").disabled = change;
         document.getElementById("periodicals_boxes_group").classList.toggle("hide");
+
+        chrome.storage.sync.set({
+            "periodicals_box": !change,
+        });
     });
 
     // make every toggle button turn the style s
@@ -759,13 +767,18 @@ function api_bib_go(prefix, mms_id) {
                 enc = "#";
             }
 
+            console.log(bib);
+
+            let title245 = bib.querySelector("record datafield[tag='245'] subfield[code='a']").textContent;
+            document.getElementById(prefix + "_bib_title").innerText = title245;
+
             // request the list of holding records associated with this bib record
             $.get(construct_api_url("retrieve_holding_list", mms_id), function(data, status) {
                 if (status != "success") {
                     console.log("API error", data, status);
                     return;
                 }
-                console.log("check here");
+                console.log(data);
                 // remove the loading screen
                 $("#" + prefix + "_holdings_loading").fadeOut(function() {
                     const holdings = data.querySelectorAll("holding");
@@ -1041,7 +1054,9 @@ function periodicals_record() {
                     setTimeout(function() {
                         send_active_message({"greeting": "edit_holding_record", "mms": bib_id, 'holding': holding_id});
                         send_active_message({"greeting": "show_holding_window", "desc": document.getElementById("periodicals_subfield_desc").value});
-                        window.close();
+                        setTimeout(function() {
+                            window.close();
+                        }, 300);
                     }, 3000);
                 });
             },
@@ -1091,7 +1106,7 @@ function construct_periodicals_description() {
     }
 
     if (boxnum != "" && judnum != "") {
-        const boxstr = "Judaica Number " + judnum + " (Box " + boxnum + ") "
+        const boxstr = "Box " + boxnum + " (Judaica " + judnum + ") "
         desc = boxstr + desc;
         subfield_desc = boxstr + subfield_desc;
     }
