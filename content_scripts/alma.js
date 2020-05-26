@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(
         } else if (request.greeting === "linking_set_defaults") {
             linking_set_defaults(request);
         } else if (request.greeting === "linking_get_mms") {
-            linking_get_mms(request, sendResponse);
+            get_mms_from_callnum(request, sendResponse);
         } else if (request.greeting === "linking_check") {
             linking_check(request);
         } else if (request.greeting === "statistics") {
@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener(
         } else if (request.greeting === "record_information") {
             md_record_information(sendResponse);
         } else if (request.greeting === "periodicals_set_mmsid") {
-            periodicals_set_mmsid(request, sendResponse);
+            get_mms_from_callnum(request, sendResponse);
         } else if (request.greeting === "edit_record") {
             edit_record(request);
         } else if (request.greeting === "edit_holding_record") {
@@ -781,21 +781,6 @@ function alma_simple_search(type, subtype, text, callback) {
 }
 
 /**
- * Find MMS ID from Call number
- * @param {[object]} request chrome message request
- * @param {[object]} reply chrome message reply
- */
-function periodicals_set_mmsid(request, reply) {
-    alma_simple_search("Physical titles", "Permanent call number", request.callnum);
-    wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(el) {
-        reply({"mms_id": el.title});
-        window.location.reload();
-        return;
-    });
-}
-
-
-/**
  * Set defaults for a linking session
  * @param {[object]} request chrome message request
  */
@@ -816,7 +801,7 @@ function linking_set_defaults(request) {
  * @param  {[object]} request chrome messaging request
  * @param  {[object]} sendResponse use for sending response
  */
-function linking_get_mms(request, sendResponse) {
+function get_mms_from_callnum(request, sendResponse) {
     // search using the given call number
     alma_simple_search("Physical titles", "Permanent call number", request.callnum);
 
@@ -824,13 +809,19 @@ function linking_get_mms(request, sendResponse) {
     wait_for_el("#SPAN_RECORD_VIEW_results_ROW_ID_0_LABEL_mmsIdmmsId", 10000, function(mmsbox) {
         setTimeout(function() {
             // check that there isn't more than one record
-            if (document.getElementById("SPAN_RECORD_VIEW_results_ROW_ID_1_LABEL_mmsIdmmsId")) {
-                sendResponse({'mms': undefined});
+            console.log(document.querySelector(".listNumOfRecords").innerText.trim());
+            if (document.querySelector(".listNumOfRecords").innerText.trim() != "(1 - 1 of 1 )") {
+                sendResponse({'mms': undefined, 'message': 'More than one matching record'});
+                window.location.reload();
             } else {
                 // return the mms id
                 sendResponse({'mms': mmsbox.innerText});
+                window.location.reload();
             }
         }, 500);
+    }, function() {
+        sendResponse({'mms': undefined, 'message': 'No matching record'});
+        window.location.reload();
     });
     return true;
 }

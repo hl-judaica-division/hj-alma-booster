@@ -5,10 +5,13 @@
  * @param  {Function}   callback the function to call once the element appears
  * @return {[interval]}          the loop that is created
  */
-function wait_for_el(selector, timeout, callback) {
+function wait_for_el(selector, timeout, callback, failcallback) {
     const safety = setTimeout(function() {
         clearInterval(temp_loop);
         alert("Judaica Error: Timeout, couldn't find element - " + selector);
+        if (failcallback) {
+            failcallback();
+        }
     }, timeout);
     const temp_loop = setInterval(function() {
         console.log(selector, "looping");

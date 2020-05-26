@@ -321,9 +321,9 @@ $(function() {
             'callnum': document.getElementById("linking_item_callnum").value
         }, function(response) {
             if (response.mms == undefined) {
-                alert("This call number search results in more than one Bib record. Please search Alma and redo the linking using MMS ID of the specific item you wish to link.");
+                alert(response.message);
                 return;
-            } 
+            }
             document.getElementById("linking_item_MMSID").value = response.mms;
             document.getElementById("linking_link_item").click();
         });
@@ -459,7 +459,10 @@ $(function() {
                 "greeting": "periodicals_set_mmsid",
                 "callnum": input,
             }, function(response) {
-                console.log(response);
+                if (response.mmsid == undefined) {
+                    alert(response.message);
+                    return;
+                }
                 start_periodicals(response.mmsid);
             });
         }
