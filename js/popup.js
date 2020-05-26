@@ -300,7 +300,7 @@ $(function() {
     });
     document.getElementById("linking_link_item").addEventListener("click", function() {
         if (document.getElementById("linking_item_MMSID").value.trim() == "") {
-            alert("You've asked me to link with an an MMS ID. Have you considered that I made need an MMS ID in order to do that...?\n\nPlease provide an MMS ID");
+            alert("Please provide an MMS ID");
             return;
         }
         linking_check_holdings(document.getElementById("linking_item_MMSID").value, {
@@ -311,9 +311,9 @@ $(function() {
         });
     });
     document.getElementById("linking_link_item_callnum").addEventListener("click", function() {
-        const prefixes = ["Heb 4", "Jud 9000.", "Jud 9000.", "Y 1", "JCDROM ", "PHeb ", "PJud ", "PJud ", "YP  ", "JCD ", "JSCO ", "JSL ", "JSW ", "JDVD ", "JFS "]
+        const prefixes = ["Heb 4", "Jud 9000.", "Jud 9000.", "Y 1", "JCDROM ", "PHeb ", "PJud ", "YP ", "JCD ", "JSCO ", "JSL ", "JSW ", "JDVD ", "JFS "]
         if (prefixes.indexOf(document.getElementById("linking_item_callnum").value) > -1) {
-            alert("You've asked me to link with a call number. Have you considered that I may need a call number in order to do this...?\n\nPlease provide a call number");
+            alert("Please provide a call number");
             return;
         }
         send_active_message({
@@ -450,25 +450,34 @@ $(function() {
     });
 
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
-        document.getElementById("periodicals_callnum").value = add_periodicals_prefix(document.getElementById("periodicals_callnum").value);
-        send_active_message({
-            "greeting": "periodicals_set_mmsid",
-            "callnum": document.getElementById("periodicals_callnum").value,
-        }, function(response) {
-            console.log(response);
-            document.getElementById("periodicals_chroni").value = document.getElementById("periodicals_chroni_prep").value;
-            document.getElementById("periodicals_enuma").value = document.getElementById("periodicals_enuma_prep").value;
-            document.getElementById("periodicals_enumb").value = document.getElementById("periodicals_enumb_prep").value;
-            document.getElementById("periodicals_boxnum").value = document.getElementById("periodicals_boxnum_prep").value;
-            document.getElementById("periodicals_judnum").value = document.getElementById("periodicals_judnum_prep").value;
-            let descs = construct_periodicals_description()
-            document.getElementById("periodicals_subfield_desc").value = descs[0];
-            document.getElementById("periodicals_desc").value = descs[1];
-            setTimeout(function() {
-                api_bib_go("periodicals", response.mms_id);
-            }, 2000);
-        });
+        let input = document.getElementById("periodicals_callnum").value
+        if (isMMS(input)) {
+            start_periodicals(mmsid);
+        } else {
+            input = add_periodicals_prefix(input);
+            send_active_message({
+                "greeting": "periodicals_set_mmsid",
+                "callnum": input,
+            }, function(response) {
+                console.log(response);
+                start_periodicals(response.mmsid);
+            });
+        }
     });
+    function start_periodicals(mms_id) {
+        document.getElementById("periodicals_chroni").value = document.getElementById("periodicals_chroni_prep").value;
+        document.getElementById("periodicals_enuma").value = document.getElementById("periodicals_enuma_prep").value;
+        document.getElementById("periodicals_enumb").value = document.getElementById("periodicals_enumb_prep").value;
+        document.getElementById("periodicals_boxnum").value = document.getElementById("periodicals_boxnum_prep").value;
+        document.getElementById("periodicals_judnum").value = document.getElementById("periodicals_judnum_prep").value;
+        let descs = construct_periodicals_description()
+        document.getElementById("periodicals_subfield_desc").value = descs[0];
+        document.getElementById("periodicals_desc").value = descs[1];
+        setTimeout(function() {
+            api_bib_go("periodicals", mms_id);
+        }, 2000);
+    }
+
     document.getElementById("periodicals_go").addEventListener("click", function() {
         periodicals_record();
     });
@@ -1193,7 +1202,7 @@ function stats_prep(get_cat) {
  *
  */
 function add_periodicals_prefix(callnum) {
-    if (callnum.match(/^[0-9]+$/) != null) {
+    if (isNaN(callnum)) {
         return callnum;
     }
 
@@ -1203,13 +1212,13 @@ function add_periodicals_prefix(callnum) {
     if (base_number <= 500) {
         prefix = "PHeb ";
     } else if (800 < base_number && base_number <= 999) {
-        prefix = "AsiaDoc";
+        prefix = "AsiaDoc ";
     } else if (1000 < base_number && base_number <= 1999) {
-        prefix = "PJud";
+        prefix = "PJud ";
     } else if (2000 < base_number && base_number <= 5000) {
-        prefix = "YP";
+        prefix = "YP ";
     } else {
-        prefix = "Invalid Base Number";
+        prefix = "";
     }
     return prefix + callnum;
 }
@@ -1229,4 +1238,8 @@ function construct_api_url(api_call, bib_mms, holding_mms) {
     }
     url += "?apikey=" + key;
     return url;
+}
+
+function isMMS(str) {
+    return str.slice(0, 2) == '99' && str.slice(str.length - 4, str.length) && str.length == 18
 }
