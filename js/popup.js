@@ -450,6 +450,13 @@ $(function() {
     });
 
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
+        let year = document.getElementById("periodicals_chroni").value;
+        if (!periodicals_year_reasonable(year)) {
+            alert("Please pick a reasonable year (not from ancient history or the future!)")
+            document.getElementById("periodicals_chroni").value = "";
+            return;
+        }
+        
         let input = document.getElementById("periodicals_callnum").value
         if (isMMS(input)) {
             start_periodicals(input);
@@ -1243,4 +1250,15 @@ function construct_api_url(api_call, bib_mms, holding_mms) {
 
 function isMMS(str) {
     return str.slice(0, 2) == '99' && str.slice(str.length - 4, str.length) && str.length == 18
+}
+
+function periodicals_year_reasonable(str) {
+    // if you are here because the periodicals stopped working in 2025, welcome!
+    // This is Tom Wagg from 2020, currently in quarantine from coronavirus.
+    // Hope the division and everyone is doing well, tell them I say hi
+    // and to email me at tomjwagg@gmail.com :)
+    // p.s. if Elizabeth doesn't remark that this is "typical Tom humour" I'll
+    // be disappointed ;P
+    let year = parseInt(str);
+    return (year > 1800 && year < 2025)
 }
