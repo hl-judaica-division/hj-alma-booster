@@ -488,7 +488,6 @@ $(function() {
 
     document.getElementById("periodicals_clear").addEventListener("click", function() {
         document.querySelectorAll(".periodicals-input").forEach(function(item, index) {
-            console.log(item);
             item.value = "";
         });
     });
@@ -1140,9 +1139,8 @@ function construct_periodicals_description() {
     }
 
     if (boxnum != "" && judnum != "") {
-        const boxstr = "Box " + boxnum + " (Judaica " + judnum + ") "
+        const boxstr = "Box " + boxnum + "(Judaica " + judnum + ") "
         desc = boxstr + desc;
-        subfield_desc = boxstr + subfield_desc;
     }
 
     return [subfield_desc, desc];
