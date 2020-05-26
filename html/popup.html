@@ -363,7 +363,7 @@
                                                 <i class="fas fa-fw fa-sort-numeric-down"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_callnum" class="form-control" placeholder="Call Number or MMS ID" data-enter-tab="periodicals_chroni_prep">
+                                        <input id="periodicals_callnum" class="form-control periodicals-input" placeholder="Call Number or MMS ID" data-enter-tab="periodicals_chroni_prep">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -371,7 +371,7 @@
                                                 <i class="far fa-fw fa-calendar-alt"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_chroni_prep" class="form-control" placeholder="Year" data-enter-tab="periodicals_enuma_prep">
+                                        <input id="periodicals_chroni_prep" class="form-control periodicals-input" placeholder="Year" data-enter-tab="periodicals_enuma_prep">
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -379,7 +379,7 @@
                                                 <i class="fas fa-fw fa-id-card"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enuma_prep" class="form-control" placeholder="Issue Number" data-enter-tab="periodicals_enumb_prep">
+                                        <input id="periodicals_enuma_prep" class="form-control periodicals-input" placeholder="Issue Number" data-enter-tab="periodicals_enumb_prep">
                                         <div class="input-group-append">
                                             <button id="periodicals_month" class="btn btn-outline-light btn-toggle" tabindex="-1">
                                                 <span>Months?</span>
@@ -394,7 +394,7 @@
                                                 <i class="fas fa-fw fa-volume-up"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_enumb_prep" class="form-control" placeholder="Volume Number" data-enter-target="periodicals_callnum_search">
+                                        <input id="periodicals_enumb_prep" class="form-control periodicals-input" placeholder="Volume Number" data-enter-target="periodicals_callnum_search">
                                     </div>
                                     <hr>
                                     <div class="input-group mb-2">
@@ -403,7 +403,7 @@
                                                 <i class="fas fa-fw fa-box"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_boxnum_prep" class="form-control" placeholder="Box Number" data-enter-target="periodicals_callnum_search" disabled>
+                                        <input id="periodicals_boxnum_prep" class="form-control periodicals-input" placeholder="Box Number" data-enter-target="periodicals_callnum_search" disabled>
                                     </div>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
@@ -411,10 +411,15 @@
                                                 <i class="fas fa-fw fa-book"></i>
                                             </div>
                                         </div>
-                                        <input id="periodicals_judnum_prep" class="form-control" placeholder="Judaica Number" data-enter-target="periodicals_callnum_search" disabled>
+                                        <input id="periodicals_judnum_prep" class="form-control periodicals-input" placeholder="Judaica Number" data-enter-target="periodicals_callnum_search" disabled>
                                     </div>
-                                    <div class="btn-group w-100">
-                                        <button id="periodicals_callnum_search" class="btn w-100 btn-outline-light">Search Call Number</button>
+                                    <div class="row">
+                                        <div class="col">
+                                            <button id="periodicals_callnum_search" class="btn btn-outline-light w-100">Search Call Number</button>
+                                        </div>
+                                        <div class="col">
+                                            <button id="periodicals_clear" class="btn btn-outline-light w-100">Clear All Fields</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

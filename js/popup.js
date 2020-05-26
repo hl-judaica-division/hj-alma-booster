@@ -486,6 +486,13 @@ $(function() {
         api_bib_go("periodicals", mms_id);
     }
 
+    document.getElementById("periodicals_clear").addEventListener("click", function() {
+        document.querySelectorAll(".periodicals-input").forEach(function(item, index) {
+            console.log(item);
+            item.value = "";
+        });
+    });
+
     document.getElementById("periodicals_go").addEventListener("click", function() {
         periodicals_record();
     });
