@@ -118,7 +118,6 @@ $(function() {
             const required = ["$$a", "$$d", "$$e", "$$f"];
             for (let i = 0; i < required.length; i++) {
                 if (stats.indexOf(required[i]) < 0) {
-                    console.log(required[i]);
                     create_alert_in_element(document.getElementById("stats_error"), "Please fill out all fields (note optional)");
                     return false;
                 }
@@ -320,11 +319,11 @@ $(function() {
             'greeting': 'linking_get_mms',
             'callnum': document.getElementById("linking_item_callnum").value
         }, function(response) {
-            if (response.mms == undefined) {
+            if (!response.success) {
                 alert(response.message);
                 return;
             }
-            document.getElementById("linking_item_MMSID").value = response.mms;
+            document.getElementById("linking_item_MMSID").value = response.mms_id;
             document.getElementById("linking_link_item").click();
         });
     });
@@ -450,10 +449,10 @@ $(function() {
     });
 
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
-        let year = document.getElementById("periodicals_chroni").value;
+        let year = document.getElementById("periodicals_chroni_prep").value;
         if (!periodicals_year_reasonable(year)) {
             alert("Please pick a reasonable year (not from ancient history or the future!)")
-            document.getElementById("periodicals_chroni").value = "";
+            document.getElementById("periodicals_chroni_prep").value = "";
             return;
         }
         
@@ -466,11 +465,11 @@ $(function() {
                 "greeting": "periodicals_set_mmsid",
                 "callnum": input,
             }, function(response) {
-                if (response.mmsid == undefined) {
+                if (!response.success) {
                     alert(response.message);
                     return;
                 }
-                start_periodicals(response.mmsid);
+                start_periodicals(response.mms_id);
             });
         }
     });
@@ -543,7 +542,6 @@ function linking_check_holdings(MMSID, defaults) {
             document.getElementById("linking_holdings_loading").innerHTML = "API Error - See Console";
             return;
         } else {
-            console.log(bibrec);
             let holdingurl = construct_api_url("retrieve_holding_list", MMSID);
             $.get(holdingurl, function(holding_list, status) {
                 if (status != "success") {
@@ -607,7 +605,6 @@ function link_item(MMSID, holding_id, defaults, bib) {
 
     bib.querySelector("record").appendChild(boxMMS929);
     bib.querySelector("record").appendChild(barcode929);
-    console.log("New", bib);
 
     // format the new bib for an http request and update it using the api
     const new_bib_string = new XMLSerializer().serializeToString(bib.documentElement);
@@ -771,7 +768,7 @@ function check_stats_input(input_id, output_id, subfield) {
 function api_bib_go(prefix, mms_id) {
     // stop if the user hasn't entered an API key
     if (!key) {
-        console.log("no key");
+        console.log("no API key stored");
         create_alert_in_element(document.getElementById(prefix + "_error"), "No API key stored in settings");
         return;
     }
@@ -797,8 +794,6 @@ function api_bib_go(prefix, mms_id) {
                 enc = "#";
             }
 
-            console.log(bib);
-
             let title245 = bib.querySelector("record datafield[tag='245'] subfield[code='a']").textContent;
             document.getElementById(prefix + "_bib_title").innerText = title245;
 
@@ -808,12 +803,9 @@ function api_bib_go(prefix, mms_id) {
                     console.log("API error", data, status);
                     return;
                 }
-                console.log(data);
                 // remove the loading screen
                 $("#" + prefix + "_holdings_loading").fadeOut(function() {
                     const holdings = data.querySelectorAll("holding");
-                    console.log(holdings);
-                    console.log();
                     // if there is only one holding record, automatically select this one
                     if (holdings.length == 1) {
                         details = {
@@ -922,7 +914,6 @@ function api_stats_go() {
     const selectors = [".btn-stats.active input", "#api_stats_string_date", "#api_stats_unit", "#api_stats_cataloguer", "#api_stats_enc"];
     for (let i = 0; i < required.length; i++) {
         if (document.querySelector(selectors[i]).value == "") {
-            console.log(required[i], selectors[i]);
             create_alert_in_element(document.getElementById("stats_error"), "Please fill out all fields (note optional)");
             return false;
         } else {
@@ -950,7 +941,6 @@ function api_stats_go() {
         // check that the field is not already present and throw an error if this is the case
         const checks = fields = holding.querySelectorAll("datafield[tag='920']");
         if (checks.length != 0) {
-            console.log(checks, "ERROR HERE");
             const table = document.getElementById("api_stats_old_stat");
             for (i = 0; i < checks[0].children.length; i++) {
                 const row = table.querySelector("td." + checks[0].children[i].getAttribute("code"));
@@ -978,7 +968,6 @@ function api_stats_go() {
             contentType: "application/xml",
             data: new_holding_string,
             success: function(data, status) {
-                console.log(data, status);
                 $("#api_stats_feedback_loading").fadeOut(function() {
                     $("#api_stats_feedback_success").fadeIn();
                 });
@@ -1032,7 +1021,6 @@ function periodicals_record() {
         const mm = m < 10 ? "0" + m.toString() : m.toString();
 
         const date_string = yyyy + "-" + mm + "-" + dd + "Z";
-        console.log(date_string);
         if (item_data.querySelector("arrival_date")) {
             item_data.querySelector("arrival_date").innerHTML = date_string;
         }
@@ -1071,7 +1059,6 @@ function periodicals_record() {
 
         new_item.removeChild(new_item.querySelector("item_data"));
         new_item.appendChild(item_data);
-        console.log(new_item);
 
         // convert object to string and POST to Alma API
         const new_items_string = new XMLSerializer().serializeToString(new_item);
@@ -1081,7 +1068,6 @@ function periodicals_record() {
             contentType: "application/xml",
             data: new_items_string,
             success: function(data, status) {
-                console.log(data, status);
                 $("#periodicals_feedback_loading").fadeOut(function() {
                     $("#periodicals_feedback_success").fadeIn();
                     setTimeout(function() {
@@ -1191,7 +1177,6 @@ function stats_prep(get_cat) {
     send_active_message({
         "greeting": "record_information",
     }, function(response) {
-        console.log(response);
         if (response) {
             if (response.encoding) {
                 document.getElementById("stats_enc").value = response.encoding;
@@ -1215,12 +1200,13 @@ function stats_prep(get_cat) {
  *
  */
 function add_periodicals_prefix(callnum) {
+    // check that the number is actually numeric
     if (isNaN(callnum)) {
         return callnum;
     }
 
+    // create a prefix based on range
     const base_number = parseInt(callnum.split(".")[0]);
-    console.log(base_number, callnum)
     let prefix = "";
     if (base_number <= 500) {
         prefix = "PHeb ";

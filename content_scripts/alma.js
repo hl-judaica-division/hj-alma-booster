@@ -811,17 +811,15 @@ function get_mms_from_callnum(request, sendResponse) {
             // check that there isn't more than one record
             console.log(document.querySelector(".listNumOfRecords").innerText.trim());
             if (document.querySelector(".listNumOfRecords").innerText.trim() != "(1 - 1 of 1 )") {
-                sendResponse({'mms': undefined, 'message': 'I found more than one matching record for that call number. Check the call number is correct and if it is, find the exact MMS ID you want and use that instead.'});
-                window.location.reload();
+                sendResponse({'mms_id': undefined, 'success': false, 'message': 'I found more than one matching record for that call number. Check the call number is correct and if it is, find the exact MMS ID you want and use that instead.'});
             } else {
                 // return the mms id
-                sendResponse({'mms': mmsbox.innerText});
+                sendResponse({'mms_id': mmsbox.innerText, 'success': true});
                 window.location.reload();
             }
         }, 500);
     }, function() {
-        sendResponse({'mms': undefined, 'message': "I can't find a record matching that call number. Did you type it correctly?"});
-        window.location.reload();
+        sendResponse({'mms_id': undefined, 'success': false, 'message': "I can't find a record matching that call number. Did you type it correctly?"});
     });
     return true;
 }
