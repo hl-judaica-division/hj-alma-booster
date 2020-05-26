@@ -452,7 +452,7 @@ $(function() {
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
         let input = document.getElementById("periodicals_callnum").value
         if (isMMS(input)) {
-            start_periodicals(mmsid);
+            start_periodicals(input);
         } else {
             input = add_periodicals_prefix(input);
             send_active_message({
@@ -476,9 +476,7 @@ $(function() {
         let descs = construct_periodicals_description()
         document.getElementById("periodicals_subfield_desc").value = descs[0];
         document.getElementById("periodicals_desc").value = descs[1];
-        setTimeout(function() {
-            api_bib_go("periodicals", mms_id);
-        }, 2000);
+        api_bib_go("periodicals", mms_id);
     }
 
     document.getElementById("periodicals_go").addEventListener("click", function() {
