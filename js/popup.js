@@ -451,7 +451,7 @@ $(function() {
     document.getElementById("periodicals_callnum_search").addEventListener("click", function() {
         let year = document.getElementById("periodicals_chroni_prep").value;
         if (!periodicals_year_reasonable(year)) {
-            alert("Please pick a reasonable year (not from ancient history or the future!)")
+            alert("Date is missing or out of range of possible values. Please fix and resubmit.")
             document.getElementById("periodicals_chroni_prep").value = "";
             return;
         }

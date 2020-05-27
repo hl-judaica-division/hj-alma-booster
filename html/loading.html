@@ -49,13 +49,13 @@
 </head>
 
 <body>
-    <div class="container-fluid" id="loading" tabindex="-1">
+    <div class="container-fluid p-3" id="loading" tabindex="-1">
         <div class="row w-100 text-center">
             <div class="col">
-                <h5>Invoice Printing Progress</h5>
+                <h5 id="loading_title">Invoice Printing Progress</h5>
             </div>
         </div>
-        <div class="row w-100 text-center">
+        <div id="invoice_info" class="row w-100 text-center invoice-only">
             <div class="col">
                 <b>Vendor:</b> <span id="vendor"></span>
             </div>
@@ -70,17 +70,21 @@
             </div>
         </div>
         <hr />
-        <div class="progress mb-2">
-            <div id="invoice" class="progress-bar" role="progressbar" style="width: 0%">Retrieving invoice</div>
-        </div>
-        <div class="progress mb-2">
-            <div id="po_lines" class="progress-bar" role="progressbar" style="width: 0%">Collecting PO Lines</div>
-        </div>
-        <div class="progress mb-2">
-            <div id="bibs" class="progress-bar" role="progressbar" style="width: 0%">Finding bib records</div>
-        </div>
-        <div class="progress mb-2">
-            <div id="prints" class="progress-bar" role="progressbar" style="width: 0%">Preparing records for print</div>
+        <div class="row">
+            <div class="col">
+                <div class="progress mb-2 invoice-only">
+                    <div id="invoice" class="progress-bar" role="progressbar" style="width: 0%">Retrieving invoice</div>
+                </div>
+                <div class="progress mb-2 invoice-only">
+                    <div id="po_lines" class="progress-bar" role="progressbar" style="width: 0%">Collecting PO Lines</div>
+                </div>
+                <div class="progress mb-2">
+                    <div id="bibs" class="progress-bar" role="progressbar" style="width: 0%">Finding bib records</div>
+                </div>
+                <div class="progress mb-2">
+                    <div id="prints" class="progress-bar" role="progressbar" style="width: 0%">Preparing records for print</div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

@@ -8,9 +8,10 @@
 function wait_for_el(selector, timeout, callback, failcallback) {
     const safety = setTimeout(function() {
         clearInterval(temp_loop);
-        alert("Judaica Error: Timeout, couldn't find element - " + selector);
         if (failcallback) {
             failcallback();
+        } else {
+            alert("Judaica Error: Timeout, couldn't find element - " + selector);
         }
     }, timeout);
     const temp_loop = setInterval(function() {

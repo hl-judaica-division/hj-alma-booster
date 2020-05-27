@@ -147,71 +147,76 @@ function print_invoice(id) {
                     clearInterval(mms_loop);
                     console.log("All MMS IDs received!");
                     mms_ids = mms_ids.sort();
-                    let print_xmls = [];
-                    i = 0;
-                    const record_loop = setInterval(function() {
-                        if (i == line_count) {
-                            clearInterval(record_loop);
-                        } else {
-                            alma_api_request(api_bases["get_record"], {
-                                "mms_id": mms_ids[i][1],
-                            }, function(xml, status) {
-                                if (status !== 200) {
-                                    const error = loading_window.document.getElementById("error");
-                                    error.style.display = "block";
-                                    error.querySelector(".alert").innerHTML = "Error retrieving record information";
-                                    return;
-                                }
-                                console.log("XML from MMS", xml);
-                                print_xmls.push([i, xml]);
-                                loading_window.document.getElementById("bibs").innerText = "Found " + print_xmls.length + " records of " + line_count;
-                                loading_window.document.getElementById("bibs").style.width = ((print_xmls.length/line_count)*100).toString() + "%";
-                            });
-                            i++;
-                        }
-                    }, 300);
-
-                    const xml_loop = setInterval(function() {
-                        if (print_xmls.length === line_count) {
-                            clearInterval(xml_loop);
-                            console.log("All XML pages received!");
-                            print_xmls = print_xmls.sort();
-                            console.log("Record XMLS", print_xmls);
-
-                            // create a print page for each record
-                            let print_pages = [];
-                            for (let k = 0; k < print_xmls.length; k++) {
-                                print_api_records(print_xmls[k][1], true, function(page) {
-                                    console.log("Page for Array", page);
-                                    print_pages.push([k, page]);
-                                    loading_window.document.getElementById("prints").innerText = "Created " + print_pages.length + " printouts of " + line_count;
-                                    loading_window.document.getElementById("prints").style.width = ((print_pages.length/line_count)*100).toString() + "%";
-                                });
-                            }
-                            const page_loop = setInterval(function() {
-                                if (print_pages.length === line_count) {
-                                    clearInterval(page_loop);
-                                    console.log("Page array", print_pages);
-                                    console.log("All Print Pages Created!");
-                                    const print_window = window.open("", "Title", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=" + (screen.width) + ", height=" + (screen.height) + ", top=" + (screen.height) + ", left=" + (screen.width));
-                                    print_window.document.write(print_html_shell);
-                                    print_pages = print_pages.sort();
-                                    for (let k = 0; k < print_pages.length; k++) {
-                                        print_window.document.getElementById("container").appendChild(print_pages[k][1]);
-                                    }
-                                    setTimeout(function() {
-                                        print_window.print();
-                                        print_window.close();
-                                        loading_window.close();
-                                    }, 1000);
-                                }
-                            }, 100);
-                        }
-                    }, 100);
+                    print_mms_list(mms_ids, loading_window);
                 }
             }, 100);
         });
     }, 'html');
+}
+
+function print_mms_list(mms_ids, loading_window) {
+    const line_count = mms_ids.length;
+    let print_xmls = [];
+    let i = 0;
+    const record_loop = setInterval(function() {
+        if (i == line_count) {
+            clearInterval(record_loop);
+        } else {
+            alma_api_request(api_bases["get_record"], {
+                "mms_id": mms_ids[i][1],
+            }, function(xml, status) {
+                if (status !== 200) {
+                    const error = loading_window.document.getElementById("error");
+                    error.style.display = "block";
+                    error.querySelector(".alert").innerHTML = "Error retrieving record information";
+                    return;
+                }
+                console.log("XML from MMS", xml);
+                print_xmls.push([i, xml]);
+                loading_window.document.getElementById("bibs").innerText = "Found " + print_xmls.length + " records of " + line_count;
+                loading_window.document.getElementById("bibs").style.width = ((print_xmls.length/line_count)*100).toString() + "%";
+            });
+            i++;
+        }
+    }, 300);
+
+    const xml_loop = setInterval(function() {
+        if (print_xmls.length === line_count) {
+            clearInterval(xml_loop);
+            console.log("All XML pages received!");
+            print_xmls = print_xmls.sort();
+            console.log("Record XMLS", print_xmls);
+
+            // create a print page for each record
+            let print_pages = [];
+            for (let k = 0; k < print_xmls.length; k++) {
+                print_api_records(print_xmls[k][1], true, function(page) {
+                    console.log("Page for Array", page);
+                    print_pages.push([k, page]);
+                    loading_window.document.getElementById("prints").innerText = "Created " + print_pages.length + " printouts of " + line_count;
+                    loading_window.document.getElementById("prints").style.width = ((print_pages.length/line_count)*100).toString() + "%";
+                });
+            }
+            const page_loop = setInterval(function() {
+                if (print_pages.length === line_count) {
+                    clearInterval(page_loop);
+                    console.log("Page array", print_pages);
+                    console.log("All Print Pages Created!");
+                    const print_window = window.open("", "Title", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=" + (screen.width) + ", height=" + (screen.height) + ", top=" + (screen.height) + ", left=" + (screen.width));
+                    print_window.document.write(print_html_shell);
+                    print_pages = print_pages.sort();
+                    for (let k = 0; k < print_pages.length; k++) {
+                        print_window.document.getElementById("container").appendChild(print_pages[k][1]);
+                    }
+                    setTimeout(function() {
+                        print_window.print();
+                        print_window.close();
+                        loading_window.close();
+                    }, 1000);
+                }
+            }, 100);
+        }
+    }, 100);
 }
 
 /**
@@ -387,6 +392,7 @@ function add_buttons() {
     const invoice_lines_add = document.getElementById("ADD_HIDERADIO_UPPERACTIONS_up_invoiceLinesList");
     const MD_back = document.getElementById("PAGE_BUTTONS_cbuttonnavigationback");
     const title = document.title;
+    const search_print = document.getElementById("RECORD_VIEW_ROW_ID_0");
 
     if (general_add !== undefined && document.getElementById("judaica_print_button") === null && title === "Record View") {
         const judaica_print_button = inject_button("judaica_print_button", "print", "#12d512");
@@ -461,6 +467,30 @@ function add_buttons() {
         });
         document.head.appendChild(style);
         document.querySelector(".welcome_second_part").parentElement.appendChild(new_welcome);
+    } else if (search_print && document.getElementById("search_print_button") == null) {
+        console.log("Search page!");
+        const search_print_button = inject_button("search_print_button", "print", "#12d512");
+        general_add.insertBefore(search_print_button, document.getElementById("ADD_HIDERADIO_up_marcFieldsList_pagesectionses2sections1widgetList0hdListparametersupperActionslinkActionFields0comboOperationoperationName_ul"));
+        document.getElementById("search_print_button").addEventListener("click", function() {
+            let num_rec = parseInt(document.querySelector(".listNumOfRecords").innerText.trim().split("-")[1].trim().split(" ")[0]);
+            let mms_list = [];
+            for (let i = 0; i < num_rec; i++) {
+                mms_list.push([i, document.getElementById("SPAN_RECORD_VIEW_results_ROW_ID_" + i.toString() + "_LABEL_mmsIdmmsId").innerText.trim()]);
+            }
+            console.log(mms_list);
+            $.get(chrome.runtime.getURL("../html/loading.html"), function(response) {
+                // create loading screen
+                const loading_window = window.open("", 'title', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=550,height=253');
+                loading_window.document.write(response);
+                $(loading_window.document).ready(function() {
+                    loading_window.document.getElementById("loading_title").innerText = "Printing Search Page";
+                    loading_window.document.querySelectorAll(".invoice-only").forEach(function(item, index) {
+                        item.style.display = "none";
+                    }); 
+                });
+                print_mms_list(mms_list, loading_window);
+            });
+        });
     }
 }
 
