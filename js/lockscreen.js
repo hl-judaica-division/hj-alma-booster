@@ -20,7 +20,6 @@ $(function() {
                     chrome.storage.sync.set({
                         "user_type": 0,
                         "library_unit": unit_list,
-                        "cat_toggle": "auto",
                         "stats_focus": "#stats_macro_copy",
                     }, function() {
                         setTimeout(function() {

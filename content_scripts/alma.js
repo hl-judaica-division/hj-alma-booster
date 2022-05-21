@@ -46,8 +46,6 @@ chrome.runtime.onMessage.addListener(
             linking_check(request);
         } else if (request.greeting === "statistics") {
             stats(request);
-        } else if (request.greeting === "introductions") {
-            intro(sendResponse);
         } else if (request.greeting === "record_information") {
             md_record_information(sendResponse);
         } else if (request.greeting === "periodicals_set_mmsid") {
@@ -967,23 +965,6 @@ function stats(request) {
             }
         }
     }, 100);
-}
-
-/**
- * Introduce the application to the user
- * @param  {[type]} reply reply function
- */
-function intro(reply) {
-    const name = document.querySelector("#ALMA_MENU_TOP_NAV_user_details > button");
-    if (!name) {
-        alert("Judaica Error: Unable to find Alma name (possibly due to Alma Update), inform supervisor");
-        return;
-    }
-    const user = name.getAttribute("data-original-title");
-    const names = user.split(",");
-    const username = names[0] + names[1].trim().slice(0, 1);
-    console.log(username);
-    reply(username);
 }
 
 /**

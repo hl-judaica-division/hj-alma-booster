@@ -1,5 +1,4 @@
 // Globals
-let get_cat = false;
 let key = null;
 
 // -----------------------------------------------------------------------------------------------
@@ -11,7 +10,7 @@ $(function() {
     // send_active_message({"greeting": "edit_holding_record", "mms": '99153750688503941', 'holding': '222291116100003941'});
 
     // load in settings from chrome.storage
-    chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_toggle", "cat_value", "api_key", "periodicals_box"], function(items) {
+    chrome.storage.sync.get(["user_type", "page", "alma_invoice", "linking_defaults", "name", "library_unit", "library_unit_previous", "stats_type", "stats_focus", "cat_value", "api_key", "periodicals_box"], function(items) {
         // if they haven't used the extension before the immediately show lockscreen
         if (items.user_type === undefined || items.user_type === 3) {
             window.location.href = "../html/lockscreen.html";
@@ -84,14 +83,8 @@ $(function() {
                 focuser.focus();
             }
         }
-        if (items.cat_toggle) {
-            if (items.cat_toggle === "auto") {
-                get_cat = true;
-            } else {
-                get_cat = false;
-            }
-        }
-        stats_prep(get_cat);
+        
+        stats_prep();
 
         if (items.cat_value) {
             document.getElementById("stats_cataloguer").value = items.cat_value;
@@ -221,7 +214,7 @@ $(function() {
 
         // special case
         if (action.innerText === "1. Statistics") {
-            stats_prep(get_cat);
+            stats_prep();
         }
 
         chrome.storage.sync.set({
@@ -369,6 +362,10 @@ $(function() {
     });
     document.getElementById("api_stats_cataloguer").addEventListener("keyup", function() {
         check_stats_input("api_stats_cataloguer", "api_stats_string_cataloguer", "f");
+		// Save cataloguer name between operations, even if operation wasn't finished
+        chrome.storage.sync.set({
+            "cat_value": document.getElementById("api_stats_cataloguer").value,
+        });
     });
 
     const api_observer = new MutationObserver(function(mutations) {
@@ -1157,23 +1154,7 @@ function issues_to_months(list) {
 /**
  * Get cataloguer name, encoding level and record and MMS ID
  */
-function stats_prep(get_cat) {
-    if (get_cat) {
-        send_active_message({
-            "greeting": "introductions",
-        }, function(cat) {
-            if (cat) {
-                document.getElementById("stats_cataloguer").value = cat;
-                check_stats_input("stats_cataloguer", "stats_string_cataloguer", "f");
-
-                document.getElementById("api_stats_cataloguer").value = cat;
-                check_stats_input("api_stats_cataloguer", "api_stats_string_cataloguer", "f");
-            } else {
-                create_alert_in_element(document.getElementById("stats_error"), "Couldn't find username from Alma. Is Alma open?");
-                create_alert_in_element(document.getElementById("api_stats_error"), "Couldn't find username from Alma. Is Alma open?");
-            }
-        });
-    }
+function stats_prep() {
     send_active_message({
         "greeting": "record_information",
     }, function(response) {

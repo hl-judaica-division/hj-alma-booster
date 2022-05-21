@@ -51,13 +51,11 @@ function save_options(close) {
         new_data = {
             "library_unit": lib,
             "stats_focus": document.querySelector("#stats_focus .btn.active").getAttribute("data-selector"),
-            "cat_toggle": document.querySelector("#cat_toggle .btn.active").getAttribute("data-action"),
         };
     } else {
         new_data = {
             "library_unit": lib,
             "stats_focus": document.querySelector("#stats_focus .btn.active").getAttribute("data-selector"),
-            "cat_toggle": document.querySelector("#cat_toggle .btn.active").getAttribute("data-action"),
             "api_key": api_key,
             "api_key_type": document.getElementById("api_key_type").selectedIndex,
         };
@@ -88,7 +86,7 @@ function save_options(close) {
  * Fill the initial settings page with the current settings in storage
  */
 function restore_options() {
-    chrome.storage.sync.get(["library_unit", "stats_focus", "cat_toggle", "api_key_type"], function(items) {
+    chrome.storage.sync.get(["library_unit", "stats_focus", "api_key_type"], function(items) {
         if (items.library_unit) {
             console.log(items.library_unit);
             for (let i = 0; i < items.library_unit.length; i++) {
@@ -99,10 +97,6 @@ function restore_options() {
         if (items.stats_focus) {
             const focus_toggle = document.querySelector("#stats_focus .btn[data-selector='" + items.stats_focus + "']");
             focus_toggle.click();
-        }
-        if (items.cat_toggle) {
-            console.log(items.cat_toggle);
-            document.querySelector("#cat_toggle .btn[data-action='" + items.cat_toggle + "']").click();
         }
         if (items.api_key_type) {
             document.getElementById("api_key").value = "KEY IN STORAGE";
