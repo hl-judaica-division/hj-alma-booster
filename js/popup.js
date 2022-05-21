@@ -1244,12 +1244,7 @@ function isMMS(str) {
 }
 
 function periodicals_year_reasonable(str) {
-    // if you are here because the periodicals stopped working in 2025, welcome!
-    // This is Tom Wagg from 2020, currently in quarantine from coronavirus.
-    // Hope the division and everyone is doing well, tell them I say hi
-    // and to email me at tomjwagg@gmail.com :)
-    // p.s. if Elizabeth doesn't remark that this is "typical Tom humour" I'll
-    // be disappointed ;P
+    // Allow any year from 1801 until 4 years in the future
     let year = parseInt(str);
-    return (year > 1800 && year < 2025)
+    return (year > 1800 && year <= (new Date()).getFullYear() + 4);
 }

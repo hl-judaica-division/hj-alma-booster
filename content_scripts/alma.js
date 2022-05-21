@@ -506,7 +506,16 @@ function add_buttons() {
 function invoice_receive(request) {
     // move to the invoice receiving page if not already there
     if (!document.getElementById("find_poLineList")) {
-        document.getElementById("MENU_LINK_ID_comexlibrisdpswrkgeneralmenuAcquisitionPOLinesReceiveNewMarterial").click();
+		// Click the "Acquisitions" button on the sidebar menu to reveal the "Receive" link.
+		document.getElementById("menu_button_comexlibrisdpswrkgeneralmenuAcquisition").children[0].children[0].children[0].click();
+		// Once that appears, click the "Receive New Material" link, which has an internal ID of "...ReceiveNewMarterial" [sic]
+		wait_for_el("#MENU_LINK_ID_comexlibrisdpswrkgeneralmenuAcquisitionPOLinesReceiveNewMarterial", 7000, function(el) {
+			el.click();
+			wait_for_el("#find_poLineList", 15000, function(el) {
+				invoice_receive(request);
+			});
+		});
+		return;
     }
 
     wait_for_el("#cuireceivingonetime_span", 7000, function(el) {
@@ -551,62 +560,70 @@ function invoice_review(request) {
     // review an invoice
 
     console.log("opening page");
-    document.getElementById("MENU_LINK_ID_comexlibrisdpswrkgeneralmenuAcquisitionInvoicesInreviewInvoice").click();
+	
+	// Click the "Acquisitions" button on the sidebar menu to reveal the "Review (Invoice)" link.
+	document.getElementById("menu_button_comexlibrisdpswrkgeneralmenuAcquisition").children[0].children[0].children[0].click();
+	wait_for_el("#MENU_LINK_ID_comexlibrisdpswrkgeneralmenuAcquisitionInvoicesInreviewInvoice", 7000, function(invoiceEl) {
+		
+		// Click the "Review (Invoice)" link, which doesn't exist until the "Acquisitions" sidebar menu is open.
+		/// document.getElementById("MENU_LINK_ID_comexlibrisdpswrkgeneralmenuAcquisitionInvoicesInreviewInvoice").click();
+		invoiceEl.click();
 
-    wait_for_el("#acqpolinelisttabunassigned_span", 7000, function(el) {
-        // search by all
-        document.getElementById("pagesectionses4sections0widgetList1hdListsearchValue2_hiddenSelect").value = "ALL";
+		wait_for_el("#acqpolinelisttabunassigned_span", 7000, function(el) {
+			// search by all
+			document.getElementById("pagesectionses4sections0widgetList1hdListsearchValue2_hiddenSelect").value = "ALL";
 
-        // remove whatever is currently there
-        if (document.getElementById("SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber")) {
-            document.getElementById("SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber").remove();
-        }
+			// remove whatever is currently there
+			if (document.getElementById("SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber")) {
+				document.getElementById("SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber").remove();
+			}
 
-        // set the value and search
-        document.getElementById("find_invoiceList").value = request.data.vendor + " " + request.data.number;
-        document.getElementById("search-go-button-invoiceList").click();
+			// set the value and search
+			document.getElementById("find_invoiceList").value = request.data.vendor + " " + request.data.number;
+			document.getElementById("search-go-button-invoiceList").click();
 
-        const loading_loop = setInterval(function() {
-            if (document.getElementById("loadingBlocker").classList.contains("hide")) {
-                clearInterval(loading_loop);
-                console.log("done now");
+			const loading_loop = setInterval(function() {
+				if (document.getElementById("loadingBlocker").classList.contains("hide")) {
+					clearInterval(loading_loop);
+					console.log("done now");
 
-                // once the one time tab appears, check if it is active
-                if (!el.classList.contains("active")) {
-                    console.log("Not active");
-                    document.getElementById("find_invoiceList").value = "";
-                    el.children[0].click();
+					// once the one time tab appears, check if it is active
+					if (!el.classList.contains("active")) {
+						console.log("Not active");
+						document.getElementById("find_invoiceList").value = "";
+						el.children[0].click();
 
-                    const search_box_loop = setInterval(function() {
-                        // wait until loading is done (dummy value get's erased)
-                        const searchbox = document.getElementById("find_invoiceList");
-                        if (searchbox) {
-                            if (searchbox.value === request.data.vendor + " " + request.data.number) {
-                                clearInterval(search_box_loop);
+						const search_box_loop = setInterval(function() {
+							// wait until loading is done (dummy value get's erased)
+							const searchbox = document.getElementById("find_invoiceList");
+							if (searchbox) {
+								if (searchbox.value === request.data.vendor + " " + request.data.number) {
+									clearInterval(search_box_loop);
 
-                                // open the first entry
-                                wait_for_el("#SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber", 7000, function(el) {
-                                    console.log(el.children[0]);
-                                    el.children[0].click();
-                                    wait_for_el("#acqinvoicewizardinvoice_lines_span", 7000, function(el) {
-                                        el.children[0].click();
-                                    });
-                                });
-                            }
-                        }
-                    }, 100);
-                } else {
-                    console.log("active");
-                    // open the first entry
-                    wait_for_el("#SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber", 7000, function(el) {
-                        el.children[0].click();
-                        wait_for_el("#acqinvoicewizardinvoice_lines_span", 7000, function(el) {
-                            el.children[0].click();
-                        });
-                    });
-                }
-            }
-        }, 100);
+									// open the first entry
+									wait_for_el("#SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber", 7000, function(el) {
+										console.log(el.children[0]);
+										el.children[0].click();
+										wait_for_el("#acqinvoicewizardinvoice_lines_span", 7000, function(el) {
+											el.children[0].click();
+										});
+									});
+								}
+							}
+						}, 100);
+					} else {
+						console.log("active");
+						// open the first entry
+						wait_for_el("#SELENIUM_ID_invoiceList_ROW_0_COL_invoiceNumber", 7000, function(el) {
+							el.children[0].click();
+							wait_for_el("#acqinvoicewizardinvoice_lines_span", 7000, function(el) {
+								el.children[0].click();
+							});
+						});
+					}
+				}
+			}, 100);
+		});
     });
 }
 
@@ -784,7 +801,8 @@ function alma_simple_search(type, subtype, text, callback) {
     // Get all of the options for type and click the right one
     const options = document.getElementById("simpleSearchObjectType").children;
     for (let i = 0; i < options.length; i++) {
-        if (options[i].getAttribute("data-search-label").trim() === type) {
+		let opt = options[i].getAttribute("data-search-label");
+        if (opt != null && opt.trim().toLowerCase() === type.toLowerCase()) {
             options[i].querySelector("a").click();
             break;
         }
@@ -1073,12 +1091,12 @@ function create_holding_window(description) {
             <script>
             document.getElementById("box").value = "` + description + `";
             document.getElementById("copy").addEventListener("click", function() {
-                console.log("yoohoo");
                 document.getElementById("box").select();
                 document.execCommand("copy");
             });
             document.getElementById("close_copy").addEventListener("click", function() {
-                document.getElementById("copy").click();
+				document.getElementById("box").select();
+				document.execCommand("copy");
                 close();
             });
             document.getElementById("close_copy").focus();
