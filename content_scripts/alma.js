@@ -390,7 +390,7 @@ function alma_api_request(base_url, parameters, callback) {
 function add_buttons() {
     const general_add = document.getElementsByClassName("export")[0];
     const invoice_lines_add = document.getElementById("ADD_HIDERADIO_UPPERACTIONS_up_invoiceLinesList");
-    const MD_back = document.getElementById("PAGE_BUTTONS_cbuttonnavigationback");
+    const MDE_ribbon = document.querySelector("#mdng\.menuRow > div > mdng-menu-pan > div > section > mat-card > mat-card-content")
     const title = document.title;
     const search_print = document.getElementById("RECORD_VIEW_ROW_ID_0");
 
@@ -423,12 +423,12 @@ function add_buttons() {
             const unique = document.getElementById("pageBeanuniqueIdentifier").innerText;
             print_invoice(unique);
         });
-    } else if (MD_back !== null && document.getElementById("judaica_MD_print_button") === null && title === "MD Editor") {
+    } else if (MDE_ribbon !== null && document.getElementById("judaica_MD_print_button") === null) {
         // Metadata editor buttons
         const MD_print = inject_button("judaica_MD_print_button", "print");
         MD_print.addEventListener("click", function() {
             // go back to previous page
-            MD_back.click();
+            window.history.back();
 
             // wait for the title to change
             const title_loop = setInterval(function() {

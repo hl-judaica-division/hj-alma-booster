@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(function(object) {
 
 // ensure embedded buttons are added every time Alma refreshes
 chrome.tabs.onUpdated.addListener(function(id, changes, tab) {
-    if (tab.url.includes("alma.exlibrisgroup.com/mng/action/home.do")) {
+    if (tab.url.includes("https://hvd.alma.exlibrisgroup.com/ng")) {
         chrome.tabs.sendMessage(id, {
             greeting: "add_buttons",
         });
