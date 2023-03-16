@@ -799,6 +799,9 @@ function alma_simple_search(type, subtype, text, callback) {
     // Get all of the options for type and click the right one
     const options = document.getElementById("simpleSearchObjectType").children;
     for (let i = 0; i < options.length; i++) {
+		if (!options[i].hasAttribute("data-search-label")) {
+			continue;
+		}
 		let opt = options[i].getAttribute("data-search-label");
         if (opt != null && opt.trim().toLowerCase() === type.toLowerCase()) {
             options[i].querySelector("a").click();
@@ -807,10 +810,14 @@ function alma_simple_search(type, subtype, text, callback) {
     }
 
     // Get all the new suboptions and click the correct one
-    const suboptions = document.getElementById("simpleSearchIndexes_hiddenSelect").options;
+    const suboptions = document.getElementById("simpleSearchIndex").children;
     for (let i = 0; i < suboptions.length; i++) {
-        if (suboptions[i].innerText.trim() === subtype) {
-            document.getElementById("simpleSearchIndexes_hiddenSelect").selectedIndex = i;
+		if (!suboptions[i].hasAttribute("data-search-label")) {
+			continue;
+		}
+		let subopt = suboptions[i].getAttribute("data-search-label");
+        if (subopt != null && subopt.trim().toLowerCase() === subtype.toLowerCase()) {
+			suboptions[i].querySelector("a").click();
             break;
         }
     }
