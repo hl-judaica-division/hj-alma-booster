@@ -303,7 +303,7 @@ $(function() {
         });
     });
     document.getElementById("linking_link_item_callnum").addEventListener("click", function() {
-        const prefixes = ["Heb 4", "Jud 9000.", "Jud 9000.", "Y 1", "JCDROM ", "PHeb ", "PJud ", "YP ", "JCD ", "JSCO ", "JSL ", "JSW ", "JDVD ", "JFS "]
+        const prefixes = ["Heb 4", "Jud 9000.", "Jud 9000.", "Y 1", "JCDROM ", "PHeb ", "PJud ", "YP ", "JMAP ", "JCD ", "JSCO ", "JSL ", "JSW ", "JDVD ", "JFS "]
         if (prefixes.indexOf(document.getElementById("linking_item_callnum").value) > -1) {
             alert("Please provide a call number");
             return;
@@ -320,9 +320,11 @@ $(function() {
             document.getElementById("linking_link_item").click();
         });
     });
+	/* 2023-04-18: Disable "linking_next" button because it re-links the item on screen instead of the next item searched.
     document.getElementById("linking_another").addEventListener("click", function() {
         window.location.reload();
     });
+	*/
     document.getElementById("linking_check").addEventListener("click", function() {
         send_active_message({
             "greeting": "linking_check",
@@ -661,9 +663,11 @@ function link_item(MMSID, holding_id, defaults, bib) {
                         document.querySelector('#linking_pbar').style.width = "100%";
                         document.querySelector('#linking_progress_text').innerText = "Linking complete!";
                         document.querySelector('#linking_ptext_loading').classList.add('hide');
+						/* 2023-04-18: Disable "linking_next" button because it re-links the item on screen instead of the next item searched. 
                         $("#linking_next").fadeIn(function() {
                             $("#linking_another").focus();
                         });
+						*/
                     },
                     failure: function(data, status) {
                         console.log("update holding failed", data);
